@@ -1,0 +1,13 @@
+//
+//  AJBorrowingDetailsHeaderData.h
+//  SP2P_7
+//
+//  Created by Ajax on 16/1/28.
+//  Copyright © 2016年 EIMS. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface AJBorrowingDetailsHeaderData : NSObject
+
+@end

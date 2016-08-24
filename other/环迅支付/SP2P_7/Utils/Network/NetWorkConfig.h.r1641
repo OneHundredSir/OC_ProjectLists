@@ -1,0 +1,34 @@
+//
+//  NetWorkConfig.h
+//  Shove
+//
+//  Created by 李小斌 on 14-9-22.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+
+#ifndef Shove_NetWorkConfig_h
+#define Shove_NetWorkConfig_h
+
+#import "AFNetworking.h"
+#import "ShoveGeneralRestGateway.h" 
+#import "ColorTools.h"
+#import <ShareSDK/ShareSDK.h>
+#import "NSString+encryptDES.h"
+#import "RestUIAlertView.h"
+#import "OverdueLoginViewController.h"
+
+// app端传输 key
+#define MD5key  @"DFGgrgkl45DGkj8g"
+// 加密 key
+#define DESkey  @"GDgLwwdK270Qj1w4"
+
+
+// 升级版本标识符
+#define codeNum 9
+
+#define Baseurl   @"http://www.niumail.com.cn"       // 测试站点
+//#define Baseurl   @"http://www.niumail.com"               // 正式站点
+//#define Baseurl   @"http://192.168.13.62:9090"       // 本地测试
+
+
+#endif

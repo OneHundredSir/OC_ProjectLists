@@ -1,0 +1,32 @@
+/* 
+  Localizable.strings
+  SP2P_6.0
+
+  Created by 李小斌 on 14-6-4.
+  Copyright (c) 2014年 EIMS. All rights reserved.
+*/
+
+/***标签卡标签名称***/
+"Tab_Home" = "首页";
+"Tab_Home_Title" = "一路捞";
+"Tab_Investment" = "参与众筹";
+"Tab_Loan" = "我要借款";
+"Tab_Transfer" = "权益转让";
+"Tab_Infromation" = "财富资讯";
+
+/***标签卡标签名称***/
+"Sort_Default" = "默认排序";
+"Sort_Money" = "金额";
+"Sort_Rate" = "利率";
+"Sort_Progress" = "进度";
+"Sort_Quality" = "还款期限";
+
+"Sort_Capital" = "待收本金";
+"Sort_Time" = "剩余时间";
+"Sort_Quality_Creditor" = "还款日";
+
+//
+"Login_No" = "立即登录";
+
+
+/*****/

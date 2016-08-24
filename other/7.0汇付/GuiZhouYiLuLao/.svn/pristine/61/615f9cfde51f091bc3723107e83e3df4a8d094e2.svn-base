@@ -1,0 +1,55 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++99246EF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++8516+++D0B072A" : {
+
+    },
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++99246EF" : {
+
+    },
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++21B8EF6" : {
+
+    },
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++187566D" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++8516+++D0B072A" : 0,
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++99246EF" : 0,
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++21B8EF6" : 0,
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++187566D" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "07B7444A-C4E7-460F-9373-B5DEF698D417",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++8516+++D0B072A" : "sp2p7\/",
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++99246EF" : "GuiZhouYiLuLao\/",
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++21B8EF6" : "BeiJingChenDong\/",
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++187566D" : "BeiJingChenDong\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SP2P_7",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "SP2P_7.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/svn.products.shovesoft.com:443\/svn\/SP2P",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++187566D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/svn.products.shovesoft.com:443\/svn\/SP2P",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++21B8EF6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/svn.products.shovesoft.com:443\/svn\/SP2P",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "20e5cffd-2dbc-0546-b076-304169ced6dd++48+++99246EF"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/svn.products.shovesoft.com:443\/svn\/SP2P",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "20e5cffd-2dbc-0546-b076-304169ced6dd++8516+++D0B072A"
+    }
+  ]
+}

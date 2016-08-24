@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="AJBorrowerInfoCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="企业联系人手机号码" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XbB-Eb-mP1">
+                        <rect key="frame" x="10" y="0.0" width="150" height="43"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="150" id="rOo-1v-PnA"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.22745098039215686" green="0.23137254901960785" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="贵州北银金融有限公司" placeholder="未填写" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QhZ-JO-h1Q">
+                        <rect key="frame" x="160" y="0.0" width="150" height="43"/>
+                        <color key="textColor" red="0.44705882352941179" green="0.45098039215686275" blue="0.45490196078431372" alpha="1" colorSpace="calibratedRGB"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="XbB-Eb-mP1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="BWW-9P-VnH"/>
+                    <constraint firstAttribute="bottom" secondItem="QhZ-JO-h1Q" secondAttribute="bottom" id="XhA-vD-W6x"/>
+                    <constraint firstAttribute="trailing" secondItem="QhZ-JO-h1Q" secondAttribute="trailing" constant="10" id="ZEJ-KO-Sre"/>
+                    <constraint firstItem="QhZ-JO-h1Q" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="baQ-kM-KDH"/>
+                    <constraint firstAttribute="bottom" secondItem="XbB-Eb-mP1" secondAttribute="bottom" id="rLz-KV-RAI"/>
+                    <constraint firstItem="QhZ-JO-h1Q" firstAttribute="leading" secondItem="XbB-Eb-mP1" secondAttribute="trailing" id="s4m-d4-zPE"/>
+                    <constraint firstItem="XbB-Eb-mP1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="sav-tn-41n"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="content" destination="QhZ-JO-h1Q" id="9vb-dh-K7I"/>
+                <outlet property="title" destination="XbB-Eb-mP1" id="gjV-Gg-34t"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

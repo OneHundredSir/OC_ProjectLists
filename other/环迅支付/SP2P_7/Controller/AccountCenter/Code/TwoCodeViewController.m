@@ -1,0 +1,494 @@
+//
+//  TwoCodeViewController.m
+//  SP2P_7
+//
+//  Created by kiu on 14-6-19.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+//  二维码
+
+#import "TwoCodeViewController.h"
+
+#import "ColorTools.h"
+#import "ExtensionMemberViewController.h"
+#import "IncomeViewController.h"
+#import "RestUIAlertView.h"
+#import "TabViewController.h"
+#import <MessageUI/MessageUI.h>
+#import <MailConnection/MailConnection.h>
+@interface TwoCodeViewController ()<UITableViewDataSource, UITableViewDelegate, HTTPClientDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate,UIAlertViewDelegate>
+{
+    NSArray *_dataArr;
+
+}
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIScrollView *codeScroll;
+@property (nonatomic, strong) UITableView *twoTableView;
+@property (nonatomic, copy) NSString *iId;  // 存储当前ID值
+@property (nonatomic, copy) NSString *boolId; // 判断ID是否有值
+@property (nonatomic, copy) NSString *imgUrl; // 分享二维码图片链接
+@property (nonatomic, copy) NSString *spreadLink;
+@property(nonatomic ,strong) NetWorkClient *requestClient;
+
+@end
+
+@implementation TwoCodeViewController
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    [self requestData];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self initData];
+    // 初始化视图
+    [self initView];
+}
+/**
+ 初始化数据
+ */
+- (void)initData
+{
+    
+    _dataArr = @[@"我成功推广的会员",@"我的推广收入",@"短信邀请",@"邮件邀请"];
+}
+
+/**
+ 初始化数据
+ */
+- (void)initView
+{
+    [self initNavigationBar];
+    
+    [self initContentView];
+}
+
+/**
+ * 初始化导航条
+ */
+- (void)initNavigationBar
+{
+    self.title = @"财富二维码";
+    [self.view setBackgroundColor:KblackgroundColor];
+    
+    [self.navigationController.navigationBar setBarTintColor:KColor];
+    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                      [UIColor whiteColor], NSForegroundColorAttributeName,
+                                                                      [UIFont fontWithName:@"Arial-BoldMT" size:16.0], NSFontAttributeName, nil]];
+    
+    // 导航条 左边 返回按钮
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_back"] style:UIBarButtonItemStyleDone target:self action:@selector(butClick:)];
+    backItem.tag = 1;
+    backItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setLeftBarButtonItem:backItem];
+    
+    // 导航条 右边 设置按钮
+    UIBarButtonItem *settingItem=[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_share"] style:UIBarButtonItemStyleDone target:self action:@selector(butClick:)];
+    settingItem.tag = 2;
+    settingItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setRightBarButtonItem:settingItem];
+}
+
+/**
+ * 初始化内容详情
+ */
+- (void)initContentView
+{
+    DLOG(@"self.view. width - > %f", self.view.frame.size.width);
+    _codeScroll = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:_codeScroll];
+    
+    // 二维码图片
+    _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    _imageView.frame = CGRectMake((MSWIDTH - 135) * 0.5, 30, 135, 135);
+    _imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [_codeScroll addSubview:_imageView];
+    
+    // 画直线
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 220, self.view.frame.size.width, 1)];
+    lineView.backgroundColor = KblackgroundColor;
+    [_codeScroll addSubview:lineView];
+    
+    UILabel *desLabel = [[UILabel alloc] initWithFrame:CGRectMake((MSWIDTH - 200)*0.5, 200, 200, 40)];
+    desLabel.text = @"推荐好友理财,坐享收益";
+    desLabel.font = [UIFont fontWithName:@"Arial" size:18.0];
+    desLabel.textColor = [UIColor redColor];
+    desLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [_codeScroll addSubview:desLabel];
+    
+    _twoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 250, MSWIDTH, 200) style:UITableViewStyleGrouped];
+    
+    _twoTableView.delegate = self;
+    _twoTableView.dataSource = self;
+    _twoTableView.scrollEnabled = NO;
+    [_twoTableView setBackgroundColor:KblackgroundColor];
+    [_codeScroll addSubview:_twoTableView];
+    _codeScroll.contentSize = CGSizeMake(MSWIDTH, 510);
+    
+}
+
+#pragma mark - UITableView 代理方法
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+	return _dataArr.count;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 40.0f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 2.0f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 2.0f;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *settingcell = @"settingCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:settingcell];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:settingcell];
+    }
+    
+    [cell setSeparatorInset:UIEdgeInsetsZero];
+    
+    // 设置 cell 右边的箭头
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+//    // 设置cell的边框
+//    if (indexPath.section == 0) {
+//        cell.textLabel.text = @"我成功推广的会员";
+//    }else{
+    cell.textLabel.text = _dataArr[indexPath.section];
+//    }
+    
+    cell.backgroundColor = [UIColor whiteColor];
+    cell.textLabel.font = [UIFont systemFontOfSize:13];
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    switch (indexPath.section) {
+        case 0:
+        {
+            ExtensionMemberViewController *extensionView = [[ExtensionMemberViewController alloc] init];
+            [self.navigationController pushViewController:extensionView animated:YES];
+        }
+            break;
+        case 1:
+        {
+            IncomeViewController *incomeView = [[IncomeViewController alloc] init];
+            [self.navigationController pushViewController:incomeView animated:YES];
+        }
+        break;
+            //短信邀请
+        case 2:
+        {
+            
+            // 判断用户设备能否发送短信
+            if (![MFMessageComposeViewController canSendText]) {
+                return;
+            }
+            
+            // 1. 实例化一个控制器
+            MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
+            
+            // 2) 短信内容
+            controller.body = [NSString stringWithFormat:@"快来投资理财吧，快来投资理财吧%@", _imgUrl];
+            
+            // 3) 设置代理
+            controller.messageComposeDelegate = self;
+            
+            // 3. 显示短信控制器
+            [self presentViewController:controller animated:YES completion:nil];
+           
+            
+        }
+            break;
+            //邮件邀请
+        default:
+        {
+            
+            // 1. 先判断能否发送邮件
+            if (![MFMailComposeViewController canSendMail]) {
+                // 提示用户设置邮箱
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"该设备暂不支持邮件分享或尚未设置邮件帐号，请先设置邮箱！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                
+                [alertView show];
+                return;
+            }
+            
+            // 2. 实例化邮件控制器，准备发送邮件
+            MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
+            
+            //主题
+            [controller setSubject:@"快来投资理财吧"];
+
+            // 正文
+            [controller setMessageBody:[NSString stringWithFormat:@"善建安全网贷APP全新面世%@",_imgUrl] isHTML:YES];
+            
+            //设置代理
+            [controller setMailComposeDelegate:self];
+            
+            // 显示控制器
+            [self presentViewController:controller animated:YES completion:nil];
+            
+   
+        }
+            break;
+    }
+}
+
+
+#pragma mark 短信控制器代理方法
+/**
+ 短信发送结果
+ 
+ MessageComposeResultCancelled,     取消
+ MessageComposeResultSent,          发送
+ MessageComposeResultFailed         失败
+ */
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    NSLog(@"%d", result);
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    
+    switch (result) {
+        case MessageComposeResultCancelled:
+        {
+            //click cancel button
+        }
+            break;
+        case MessageComposeResultFailed:// send failed
+            
+            break;
+            
+        case MessageComposeResultSent:
+        {
+            //do something
+            [SVProgressHUD showSuccessWithStatus:@"发送成功"];
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+#pragma mark - 邮件代理方法
+/**
+ MFMailComposeResultCancelled,      取消
+ MFMailComposeResultSaved,          保存邮件
+ MFMailComposeResultSent,           已经发送
+ MFMailComposeResultFailed          发送失败
+ */
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    // 根据不同状态提示用户
+    NSLog(@"%d", result);
+    switch (result) {
+        case MFMailComposeResultCancelled:
+        {
+            //click cancel button
+        }
+            break;
+        case MFMailComposeResultFailed:// send failed
+            
+            break;
+            
+        case MFMailComposeResultSent:
+        {
+            //do something
+            [SVProgressHUD showSuccessWithStatus:@"发送成功"];
+        }
+            break;
+        default:
+            break;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIAlertDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    DLOG(@"buttonIndex: %ld", (long)buttonIndex);
+    switch (buttonIndex) {
+        case 0:
+            
+            break;
+        case 1:
+            
+            break;
+    }
+}
+
+#pragma mark 1、返回   2、分享
+- (void)butClick:(UIButton *)but
+{
+    switch (but.tag) {
+        case 1:{
+            if (self.backTypeNum) {
+                [self.navigationController popViewControllerAnimated:YES];
+                
+            }else{
+//                TabViewController *tabViewController = [[TabViewController alloc] init];
+            TabViewController *tabViewController = [TabViewController shareTableView];
+            [self.frostedViewController presentMenuViewController];
+            self.frostedViewController.contentViewController = tabViewController;
+          
+            
+            }
+
+
+        }
+            break;
+        case 2:
+        {
+            DLOG(@"分享");
+            
+            if (AppDelegateInstance.userInfo == nil) {
+                
+                  [ReLogin outTheTimeRelogin:self];
+                
+            }else {
+            
+                //构造分享内容
+                id<ISSContent> publishContent = [ShareSDK content:@"善建安全网贷APP全新面世"
+                                                   defaultContent:@""
+                                                            image:[ShareSDK pngImageWithImage:[UIImage imageNamed:@"logo"]]
+                                                            title:@"快来投资理财吧"
+                                                              url:[NSString stringWithFormat:@"%@/reg?recommendName=%@",Baseurl,AppDelegateInstance.userInfo.userName]
+                                                      description:@""
+                                                        mediaType:SSPublishContentMediaTypeNews];
+                
+                [ShareSDK showShareActionSheet:nil
+                                     shareList:nil
+                                       content:publishContent
+                                 statusBarTips:YES
+                                   authOptions:nil
+                                  shareOptions: nil
+                                        result:^(ShareType type, SSResponseState state, id<ISSPlatformShareInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
+                                            if (state == SSResponseStateSuccess)
+                                            {
+                                                DLOG(@"分享成功");
+                                            }
+                                            else if (state == SSResponseStateFail)
+                                            {
+                                                DLOG(@"分享失败,错误码:%ld,错误描述:%@", (long)[error errorCode], [error errorDescription]);
+                                                [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"分享失败,错误码:%ld,错误描述:%@", (long)[error errorCode], [error errorDescription]]];
+                                            }
+                                        }];
+            }
+        }
+            break;
+    }
+}
+
+/**
+ 加载数据
+ */
+- (void)requestData
+{
+    if (AppDelegateInstance.userInfo == nil) {
+        [ReLogin outTheTimeRelogin:self];
+        return;
+    }else {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        
+        [parameters setObject:@"28" forKey:@"OPT"];
+        [parameters setObject:@"" forKey:@"body"];
+        [parameters setObject:AppDelegateInstance.userInfo.userId forKey:@"id"];
+        
+        if (_requestClient == nil) {
+            _requestClient = [[NetWorkClient alloc] init];
+            _requestClient.delegate = self;
+        }
+        [_requestClient requestGet:@"app/services" withParameters:parameters];
+    }
+}
+
+#pragma mark HTTPClientDelegate 网络数据回调代理
+-(void) startRequest
+{
+   
+}
+
+// 返回成功
+-(void) httpResponseSuccess:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didSuccessWithObject:(id)obj
+{
+    NSDictionary *dics = obj;
+    
+    DLOG(@"_imgUrl -> %@", dics);
+     if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-1"]) {
+        DLOG(@"返回成功  msg -> %@",[obj objectForKey:@"msg"]);
+        
+        if ([[obj objectForKey:@"promoteImg"] hasPrefix:@"http"]) {
+            
+            _imgUrl = [NSString stringWithFormat:@"%@", [obj objectForKey:@"promoteImg"]];
+        }else{
+            
+            _imgUrl = [NSString stringWithFormat:@"%@%@",Baseurl, [obj objectForKey:@"promoteImg"]];
+        }
+         _spreadLink = [dics objectForKey:@"spreadLink"];
+        DLOG(@"_imgUrl -> %@", _imgUrl);
+        [_imageView sd_setImageWithURL:[NSURL URLWithString:_imgUrl]];
+        DLOG(@"_imageView.image -> %@", [NSString stringWithFormat:@"%@%@",Baseurl, [obj objectForKey:@"promoteImg"]]);
+        
+    }else if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-2"]) {
+        
+        [ReLogin outTheTimeRelogin:self];
+        
+    }else {
+        DLOG(@"返回失败  msg -> %@",[obj objectForKey:@"msg"]);
+        
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+    }
+}
+
+// 返回失败
+-(void) httpResponseFailure:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didFailWithError:(NSError *)error
+{
+    // 服务器返回数据异常
+//    [SVProgressHUD showErrorWithStatus:@"网络异常"];
+
+}
+
+// 无可用的网络
+-(void) networkError
+{
+    [SVProgressHUD showErrorWithStatus:@"无可用网络"];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (_requestClient != nil) {
+        [_requestClient cancel];
+    }
+}
+
+@end

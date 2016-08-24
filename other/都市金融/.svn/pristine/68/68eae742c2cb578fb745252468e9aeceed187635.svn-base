@@ -1,0 +1,61 @@
+//
+//  NetWorkConfig.h
+//  Shove
+//
+//  Created by 李小斌 on 14-9-22.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+
+#ifndef Shove_NetWorkConfig_h
+#define Shove_NetWorkConfig_h
+
+#import "AFNetworking.h"
+#import "ShoveGeneralRestGateway.h" 
+#import "ColorTools.h"
+#import <ShareSDK/ShareSDK.h>
+#import "NSString+encryptDES.h"
+#import "ReLogin.h"
+#import "NSString+Date.h"
+
+/**
+ *  资金托管操作类型IOS定义
+ *
+ 1.开户 2.充值 3.投标 4.提现 5.绑定银行卡 6.债权转让竞拍确认（竟价）7.债权转让竞拍确认受让（定向）8.还款
+ * 9 日利宝转入
+ */
+#define TYPE_OPEN_ACCOUNT 1
+#define TYPE_RECHARGE 2
+#define TYPE_INVEST 3
+#define TYPE_WITHDRAW 4
+#define TYPE_BINDING_CARD 5
+#define TYPE_AUCTION 6 //竞拍
+#define TYPE_TRANSFER 7 //确认受让
+#define TYPE_REPAYMENT 8
+
+#define TYPE_DailyErningTransferIn 9
+/**
+ *  资金托管接口
+ *
+ * 普通网关：0
+ * 汇付、 易宝 : 1
+ */
+#define TRUSTEESHIP 1
+
+/**
+ *  是否为资金托管
+ *
+ *  @param TRUSTEESHIP 1时为托管
+ */
+#define IS_TRUSTEESHIP (TRUSTEESHIP == 1)
+
+// 升级版本标识符
+#define codeNum 4
+//#define Baseurl   @"http://192.168.8.109:9009"//本地域名
+//#define Baseurl @"http://p2p-11.test12.shovesoft.com/" // 测试站点---20160121
+// app端传输 key
+#define MD5key  @"eSTewh6VSSKDv5lsLdiifawu8tZfX8b7"
+// app端加密 key
+#define DESkey  @"zsrkwuEZnXQUIswAUAtQPmM7ygdECu4F"
+// 域名
+#define Baseurl @"http://119.29.117.101"  // 汇付测试站点
+#endif

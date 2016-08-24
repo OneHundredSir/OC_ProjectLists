@@ -1,0 +1,964 @@
+//
+//  TenderRobotViewController.m
+//  SP2P_7
+//
+//  Created by Jerry on 14-6-18.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+//账户中心--》理财子账户————》投标机器人
+#import "TenderRobotViewController.h"
+
+#import "ColorTools.h"
+#import "QCheckBox.h"
+
+#import "AJComboBox.h"
+#import <QuartzCore/QuartzCore.h>
+
+#define fontsize 10.0f
+
+@interface TenderRobotViewController ()<UITextFieldDelegate,AJComboBoxDelegate, HTTPClientDelegate, QCheckBoxDelegate, UIScrollViewDelegate>
+{
+    NSArray *titleArr;
+    NSArray *selectArr;
+    
+    int status;         // 解析数据 状态（1：进入页面   2：开启    3：关闭）
+    
+    NSMutableArray *creditRating;        // 信用等级
+    NSMutableArray *creditRatingValue;   // 信用等级对应的值
+    NSArray *_borrowtype;          //
+    NSMutableArray *bType;
+    NSMutableString *_typeStr;
+    
+    BOOL isTwoClick;    // 防止快速点击开启、关闭投标机器人按钮（数据请求错误）
+}
+
+@property (nonatomic,strong) AJComboBox *minPeriod;         // 最小期限
+@property (nonatomic,strong) AJComboBox *maxPeriod;         // 最大期限
+@property (nonatomic,strong) AJComboBox *minCredit;         // 最小信用等级
+@property (nonatomic,strong) AJComboBox *maxCredit;         // 最大信用等级
+@property (nonatomic,strong) AJComboBox *validityCombo;     // 有效期
+@property (nonatomic,strong)UIButton *keyBtn;
+@property (nonatomic,strong)UIButton *startBtn;
+@property (nonatomic,strong)UILabel *statelabel;
+@property (nonatomic,strong)UILabel *moneylabel;        // 余额
+@property (nonatomic,strong)QCheckBox *check;
+@property (nonatomic,strong) QCheckBox *ordinary;         // 普通借款
+@property (nonatomic,strong) QCheckBox *credit;           // 信用借款
+@property (nonatomic,strong) QCheckBox *net;              // 净值借款
+@property (nonatomic,strong) QCheckBox *check1;           // 天
+@property (nonatomic,strong) QCheckBox *check2;           // 月
+
+// 选中状态的值
+@property (nonatomic, assign) NSInteger creditStart;                   // 信用等级开始
+@property (nonatomic, assign) NSInteger creditEnd;                     // 信用等级结束
+@property (nonatomic, assign) NSInteger robotStatus;                   // 投标机器人状态
+@property (nonatomic, assign) NSInteger validType;                     // 有效期类别
+@property (nonatomic, assign) NSInteger validDate;                     // 有效期
+@property (nonatomic, assign) NSInteger deadlineStart;                 // 借款期限开始
+@property (nonatomic, assign) NSInteger deadlineEnd;                   // 借款期限结束
+@property (nonatomic, strong) UITextField *rateStart;          // 利率范围开始
+@property (nonatomic, strong) UITextField *rateEnd;            // 利率范围结束
+@property (nonatomic, strong) UITextField *bidAmount;          // 投标金额
+@property (nonatomic, strong) UITextField *remandAmount;       // 保留金额
+@property (nonatomic, strong) UITextField *minAmount;          // 最小投资金额
+@property (nonatomic, strong) UITextField *maxAmount;          // 最大投资金额
+@property (nonatomic, assign) NSInteger robotId;                       // 机器人ID
+
+@property (nonatomic , strong) UIScrollView *scrollView;
+
+@property(nonatomic ,strong) NetWorkClient *requestClient;
+
+@end
+
+@implementation TenderRobotViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    // 初始化数据
+    [self initData];
+    
+    // 初始化视图
+    [self initView];
+    
+    [self requestData];
+}
+
+/**
+ * 初始化数据
+ */
+- (void)initData
+{
+    titleArr = @[@"投资机器人状态:",@"你的账户余额:",@"有效期类型:",@"有效期:",@"每次投标金额",@"借款额度范围",@"利率范围",@"借款期限",@"信用等级",@"账户保留金额",@"借款类型"];
+    
+    selectArr =@[@[@"1月",@"2月",@"3月",@"4月",@"5月",@"6月",@"7月",@"8月",@"9月",@"10月",@"11月",@"12月",@"24月"],
+                 @[@"1月",@"2月",@"3月",@"4月",@"5月",@"6月",@"7月",@"8月",@"9月",@"10月",@"11月",@"12月"],
+                 @[@"1天",@"2天",@"3天",@"4天",@"5天",@"6天",@"7天",@"8天",@"9天",@"10天",@"11天",@"12天",@"13天",@"14天",@"15天",@"16天",@"17天",@"18天",@"19天",@"20天",@"21天",@"22天",@"23天",@"24天",@"25天",@"26天",@"27天",@"28天",@"29天",@"30天"],
+                 @[@"HR",@"CC",@"BB",@"A",@"D",@"E",@"AA"]
+                 ];
+    
+    creditRating = [[NSMutableArray alloc] init];
+    creditRatingValue = [[NSMutableArray alloc] init];
+    bType = [[NSMutableArray alloc] init];
+    isTwoClick = YES;
+}
+
+/**
+ 初始化数据
+ */
+- (void)initView
+{
+    
+    [self initNavigationBar];
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    _scrollView.userInteractionEnabled = YES;
+    _scrollView.scrollEnabled = YES;
+//    _scrollView.showsHorizontalScrollIndicator =NO;
+//    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.delegate = self;
+    _scrollView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_scrollView];
+    
+    _scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 520);
+    
+    UIControl *viewControl = [[UIControl alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [viewControl addTarget:self action:@selector(ControlAction) forControlEvents:UIControlEventTouchUpInside];
+    [_scrollView addSubview:viewControl];
+    
+    //标题文本
+    for (int i = 0; i < titleArr.count; i++) {
+        UILabel *titlelabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 15+ 35 * i, 130, 30)];
+        titlelabel.text = [titleArr objectAtIndex:i];
+        titlelabel.textAlignment = NSTextAlignmentRight;
+        
+        if (i == 5 || i == 6 || i == 7 || i == 8 || i == 10) {
+            titlelabel.textAlignment = NSTextAlignmentLeft;
+            titlelabel.frame = CGRectMake(28, 15 + 35 * i, 130, 30);
+        }
+        titlelabel.font = [UIFont boldSystemFontOfSize:14.0f];
+        [_scrollView addSubview:titlelabel];
+    }
+    
+    //状态文本
+    _statelabel = [[UILabel alloc] initWithFrame:CGRectMake(140, 15, 130, 30)];
+    _statelabel.text = @"关闭状态";
+    _statelabel.textAlignment = NSTextAlignmentLeft;
+    _statelabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _statelabel.textColor = [UIColor grayColor];
+    [_scrollView addSubview:_statelabel];
+    
+    //余额
+    _moneylabel = [[UILabel alloc] initWithFrame:CGRectMake(140, 50, 130, 30)];
+    _moneylabel.text = @"";
+    _moneylabel.textColor = PinkColor;
+    _moneylabel.textAlignment = NSTextAlignmentLeft;
+    _moneylabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    [_scrollView addSubview:_moneylabel];
+    
+    // 有效期类型
+    // 天
+    _check1 = [[QCheckBox alloc] initWithDelegate:self];
+    _check1.frame = CGRectMake(140, 85, 50, 30);
+    [_check1 setTag:101];
+    _check1.checked = 1;
+    [_check1 setTitle:@"天" forState:UIControlStateNormal];
+    [_check1 setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [_check1.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
+    [_check1 setImage:[UIImage imageNamed:@"checkbox2_unchecked"] forState:UIControlStateNormal];
+    [_check1 setImage:[UIImage imageNamed:@"checkbox2_checked"] forState:UIControlStateSelected];
+    [_scrollView addSubview:_check1];
+    
+    // 月
+    _check2 = [[QCheckBox alloc] initWithDelegate:self];
+    _check2.frame = CGRectMake(185, 85, 50, 30);
+    [_check2 setTag:102];
+    [_check2 setTitle:@"月" forState:UIControlStateNormal];
+    [_check2 setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [_check2.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
+    [_check2 setImage:[UIImage imageNamed:@"checkbox2_unchecked"] forState:UIControlStateNormal];
+    [_check2 setImage:[UIImage imageNamed:@"checkbox2_checked"] forState:UIControlStateSelected];
+    [_scrollView addSubview:_check2];
+    
+    // 有效期
+    _validityCombo = [[AJComboBox alloc] initWithFrame:CGRectMake(140, 130, 75, 20)];
+    _validityCombo.table.frame= CGRectMake(_validityCombo.frame.origin.x, _validityCombo.frame.origin.y+85, _validityCombo.frame.size.width, 90);
+    [_validityCombo setLabelText:@"- 请选择 -"];
+    [_validityCombo setDelegate:self];
+    [_validityCombo setTag:0];
+    [_validityCombo setArrayData:[selectArr objectAtIndex:2]];
+    [_scrollView addSubview:_validityCombo];
+    
+    //投标金额输入框
+    _bidAmount = [[UITextField alloc] init];
+    _bidAmount.frame = CGRectMake(140, 160, 100, 25);
+    _bidAmount.borderStyle = UITextBorderStyleRoundedRect ;
+    _bidAmount.delegate = self;
+    [_scrollView addSubview:_bidAmount];
+    
+    //投标金额 后面的 元
+    UILabel *tField = [[UILabel alloc] init];
+    tField.frame = CGRectMake(250, 160, 20, 25);
+    tField.text = @"元";
+    [tField setTintColor:[UIColor blackColor]];
+    [_scrollView addSubview:tField];
+    
+    // 最小投资金额
+    _minAmount = [[UITextField alloc] initWithFrame:CGRectMake(120, 195, 75, 20)];
+    _minAmount.borderStyle = UITextBorderStyleRoundedRect ;
+    _minAmount.delegate = self;
+    [_scrollView addSubview:_minAmount];
+    
+    // 最大投资金额
+    _maxAmount = [[UITextField alloc] initWithFrame:CGRectMake(220, 195, 75, 20)];
+    _maxAmount.borderStyle = UITextBorderStyleRoundedRect ;
+    _maxAmount.delegate = self;
+    [_scrollView addSubview:_maxAmount];
+    
+    //保留金额输入框
+    _remandAmount = [[UITextField alloc] init];
+    _remandAmount.frame = CGRectMake(140, 335, 100, 25);
+    _remandAmount.borderStyle = UITextBorderStyleRoundedRect ;
+    _remandAmount.delegate = self;
+    [_scrollView addSubview:_remandAmount];
+   
+    //利率
+    for (int j = 0; j <= 1; j++) {
+        
+        // 左输入框
+        _rateStart = [[UITextField alloc] initWithFrame:CGRectMake(105, 230, 45, 25)];
+        _rateStart.borderStyle = UITextBorderStyleRoundedRect ;
+        _rateStart.delegate = self;
+        [_scrollView addSubview:_rateStart];
+        
+        // 右输入框
+        _rateEnd = [[UITextField alloc] initWithFrame:CGRectMake(200, 230, 45, 25)];
+        _rateEnd.borderStyle = UITextBorderStyleRoundedRect ;
+        _rateEnd.delegate = self;
+        [_scrollView addSubview:_rateEnd];
+        
+        UILabel *hundredlabel = [[UILabel alloc] init];
+        if (j==0) {
+            hundredlabel.frame = CGRectMake(150, 20 + 35 * 6, 130, 30);
+        }
+        else
+        {
+            hundredlabel.frame = CGRectMake(250, 20 + 35 * 6, 130, 30);
+        }
+        hundredlabel.text = @"%";
+        hundredlabel.textColor = [UIColor grayColor];
+        hundredlabel.textAlignment = NSTextAlignmentLeft;
+        [_scrollView addSubview:hundredlabel];
+    }
+    
+    // 普通借款
+    _ordinary = [[QCheckBox alloc] initWithDelegate:self];
+    _ordinary.tag = 2220;
+    _ordinary.frame = CGRectMake(110, 20 + 35 * 10, 100, 25);
+    [_ordinary setTitle:@"普通借款" forState:UIControlStateNormal];
+    [_ordinary setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [_ordinary setImage:[UIImage imageNamed:@"checkbox3_unchecked"] forState:UIControlStateNormal];
+    [_ordinary setImage:[UIImage imageNamed:@"checkbox3_checked"] forState:UIControlStateSelected];
+    [_ordinary.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
+    
+    [_scrollView addSubview:_ordinary];
+    
+    // 信用借款
+    _credit = [[QCheckBox alloc] initWithDelegate:self];
+    _credit.tag = 2221;
+    _credit.frame = CGRectMake(110, 10 + 35 * 11, 100, 25);
+    [_credit setTitle:@"信用借款" forState:UIControlStateNormal];
+    [_credit setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [_credit setImage:[UIImage imageNamed:@"checkbox3_unchecked"] forState:UIControlStateNormal];
+    [_credit setImage:[UIImage imageNamed:@"checkbox3_checked"] forState:UIControlStateSelected];
+    [_credit.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
+    
+    [_scrollView addSubview:_credit];
+    
+    // 净值借款
+    _net = [[QCheckBox alloc] initWithDelegate:self];
+    _net.tag = 2222;
+    _net.frame = CGRectMake(110, 35 * 12, 100, 25);
+    [_net setTitle:@"净值借款" forState:UIControlStateNormal];
+    [_net setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [_net setImage:[UIImage imageNamed:@"checkbox3_unchecked"] forState:UIControlStateNormal];
+    [_net setImage:[UIImage imageNamed:@"checkbox3_checked"] forState:UIControlStateSelected];
+    [_net.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
+    
+    [_scrollView addSubview:_net];
+    
+    //单选按钮
+    for (int j=0; j<=3; j++) {
+        
+        UILabel *henlabel = [[UILabel alloc] init];
+        henlabel.frame = CGRectMake(175, 235 + j * 32, 70, 20);
+        henlabel.text = @"---";
+        henlabel.textColor = [UIColor grayColor];
+        henlabel.textAlignment = NSTextAlignmentLeft;
+        if (j==1||j==2) {
+          henlabel.frame = CGRectMake(185, 235 + j * 32, 70, 20);
+
+        }else if(j == 3){
+            henlabel.frame = CGRectMake(202, 195, 70, 20);
+            henlabel.text = @"--";
+        }
+        [_scrollView addSubview:henlabel];
+    }
+
+    //开启投标机器人
+    _startBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [_startBtn setTitle:@"开启投标机器人" forState:UIControlStateNormal];
+    [_startBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _startBtn.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:15.0];
+    _startBtn.frame = CGRectMake(20, 470, 120, 30);
+    _startBtn.layer.cornerRadius = 3.0f;
+    _startBtn.layer.masksToBounds = YES;
+    _startBtn.backgroundColor = PinkColor;
+    [_startBtn addTarget:self action:@selector(startBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_scrollView addSubview:_startBtn];
+    
+    //一键完成
+    _keyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [_keyBtn setTitle:@"一键完成" forState:UIControlStateNormal];
+    [_keyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _keyBtn.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:15.0];
+    _keyBtn.frame = CGRectMake(170, 470, 120, 30);
+    _keyBtn.backgroundColor= BrownColor;
+    _keyBtn.layer.cornerRadius = 4.0f;
+    _keyBtn.layer.masksToBounds = YES;
+    [_keyBtn addTarget:self action:@selector(keyBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_scrollView addSubview:_keyBtn];
+    
+    // 最小期限
+    _minPeriod = [[AJComboBox alloc] initWithFrame:CGRectMake(100, 265, 75, 20)];
+    _minPeriod.table.frame= CGRectMake(_minPeriod.frame.origin.x, _minPeriod.frame.origin.y+85, _minPeriod.frame.size.width, 90);
+    [_minPeriod setLabelText:@"- 请选择 -"];
+    [_minPeriod setDelegate:self];
+    [_minPeriod setArrayData:[selectArr objectAtIndex:0]];
+    _minPeriod.tag = 1111;
+    [_scrollView addSubview:_minPeriod];
+    
+    // 最大期限
+    _maxPeriod = [[AJComboBox alloc] initWithFrame:CGRectMake(215, 265, 75, 20)];
+    _maxPeriod.table.frame= CGRectMake(_maxPeriod.frame.origin.x, _maxPeriod.frame.origin.y+85, _maxPeriod.frame.size.width, 90);
+    [_maxPeriod setLabelText:@"- 请选择 -"];
+    [_maxPeriod setDelegate:self];
+    [_maxPeriod setArrayData:[selectArr objectAtIndex:0]];
+    _maxPeriod.tag = 1112;
+    [_scrollView addSubview:_maxPeriod];
+    
+    // 最小信用等级
+    _minCredit = [[AJComboBox alloc] initWithFrame:CGRectMake(100, 300, 75, 20)];
+    _minCredit.table.frame= CGRectMake(_minCredit.frame.origin.x, _minCredit.frame.origin.y+85, _minCredit.frame.size.width, 90);
+    [_minCredit setLabelText:@"- 请选择 -"];
+    [_minCredit setDelegate:self];
+    [_minCredit setTag:1113];
+    [_minCredit setArrayData:creditRating];
+    [_scrollView addSubview:_minCredit];
+    
+    // 最大信用等级
+    _maxCredit = [[AJComboBox alloc] initWithFrame:CGRectMake(215, 300, 75, 20)];
+    _maxCredit.table.frame= CGRectMake(_maxCredit.frame.origin.x, _maxCredit.frame.origin.y+85, _maxCredit.frame.size.width, 90);
+    [_maxCredit setLabelText:@"- 请选择 -"];
+    [_maxCredit setDelegate:self];
+    [_maxCredit setTag:1114];
+    [_maxCredit setArrayData:creditRating];
+    [_scrollView addSubview:_maxCredit];
+
+}
+
+
+/**
+ * 初始化导航条
+ */
+- (void)initNavigationBar
+{
+    self.title = @"投标机器人";
+    [self.navigationController.navigationBar setBarTintColor:KColor];
+    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                      [UIColor whiteColor], NSForegroundColorAttributeName,
+                                                                      [UIFont fontWithName:@"Arial-BoldMT" size:18.0], NSFontAttributeName, nil]];
+
+    // 导航条返回按钮
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_back"] style:UIBarButtonItemStyleDone target:self action:@selector(backClick)];
+    backItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setLeftBarButtonItem:backItem];
+    
+}
+
+#pragma mark -
+#pragma mark AJComboBoxDelegate
+
+-(void)didChangeComboBoxValue:(AJComboBox *)comboBox selectedIndex:(NSInteger)selectedIndex
+{
+    switch (comboBox.tag) {
+        case 0:
+        {
+            _validDate = selectedIndex + 1;
+            DLOG(@"_validDate: %@", @(selectedIndex));
+        }
+            break;
+        case 1111:
+        {
+            if (selectedIndex == 12) {
+                _deadlineStart = 24;
+            }else {
+                _deadlineStart = selectedIndex + 1;
+            }
+            DLOG(@"_deadlineStart -> %@", @(_deadlineStart));
+        }
+            break;
+        case 1112:
+        {
+            if (selectedIndex == 12) {
+                _deadlineEnd = 24;
+            }else {
+                _deadlineEnd = selectedIndex + 1;
+            }
+            DLOG(@"_deadlineEnd -> %@", @(_deadlineEnd));
+        }
+            break;
+        case 1113:
+        {
+            _creditStart = [creditRatingValue[selectedIndex] integerValue];
+            DLOG(@"_creditStart -> %@", @(_creditStart));
+        }
+            break;
+        case 1114:
+        {
+            _creditEnd = [creditRatingValue[selectedIndex] integerValue];
+            DLOG(@"_creditEnd -> %@", @(_creditEnd));
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+
+bool startclick = YES;
+#pragma 开启按钮
+- (void)startBtnClick
+{
+     _typeStr = [[NSMutableString alloc] init];
+    if (bType.count) {
+        for (int i=0; i<bType.count; i++) {
+            NSString *str = [bType objectAtIndex:i];
+            [_typeStr appendString:[NSString stringWithFormat:@"%@,",str]];
+        }
+        
+        [_typeStr deleteCharactersInRange:NSMakeRange(_typeStr.length-1,1)];
+    }else
+        [_typeStr appendString:@"0"];
+    DLOG(@"选中类型的字符串为:%@",_typeStr);
+    DLOG(@"_robotId - > %@", @(_robotId));
+
+    if (!btnclick) {
+        
+        if (isTwoClick) {
+            isTwoClick = NO;
+            
+            if(startclick){
+                [_startBtn setTitle:@"关闭投标机器人" forState:UIControlStateNormal];
+                _statelabel.text = @"开启状态";
+                startclick = NO;
+                status = 2;
+                
+                NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+                
+                [parameters setObject:@"62" forKey:@"OPT"];
+                [parameters setObject:@"" forKey:@"body"];
+                [parameters setObject:AppDelegateInstance.userInfo.userId forKey:@"id"];
+                [parameters setObject:_bidAmount.text forKey:@"bidAmount"];
+                [parameters setObject:_rateStart.text forKey:@"rateStart"];
+                [parameters setObject:_rateEnd.text forKey:@"rateEnd"];
+                [parameters setObject:[NSString stringWithFormat:@"%ld", (long)_deadlineStart] forKey:@"deadlineStart"];
+                [parameters setObject:[NSString stringWithFormat:@"%ld", (long)_deadlineEnd] forKey:@"deadlineEnd"];
+                [parameters setObject:[NSString stringWithFormat:@"%ld", (long)_creditStart] forKey:@"creditStart"];
+                [parameters setObject:[NSString stringWithFormat:@"%ld", (long)_creditEnd] forKey:@"creditEnd"];
+                [parameters setObject:_remandAmount.text forKey:@"remandAmount"];
+                [parameters setObject:_typeStr forKey:@"borrowWay"];
+                [parameters setObject:[NSString stringWithFormat:@"%ld", (long)_validType] forKey:@"validType"];
+                [parameters setObject:[NSString stringWithFormat:@"%ld", (long)_validDate] forKey:@"validDate"];
+                [parameters setObject:_minAmount.text forKey:@"minAmount"];
+                [parameters setObject:_maxAmount.text forKey:@"maxAmount"];
+                
+                if (_requestClient == nil) {
+                    _requestClient = [[NetWorkClient alloc] init];
+                    _requestClient.delegate = self;
+                }
+                [_requestClient requestGet:@"app/services" withParameters:parameters];
+            }else{
+                
+                [_startBtn setTitle:@"开启投标机器人" forState:UIControlStateNormal];
+                _statelabel.text = @"关闭状态";
+                startclick = YES;
+                status = 3;
+                
+                NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+                
+                [parameters setObject:@"64" forKey:@"OPT"];
+                [parameters setObject:@"" forKey:@"body"];
+                [parameters setObject:AppDelegateInstance.userInfo.userId forKey:@"user_id"];
+                [parameters setObject:[NSString stringWithFormat:@"%ld", (long)_robotId] forKey:@"robotId"];
+                
+                if (_requestClient == nil) {
+                    _requestClient = [[NetWorkClient alloc] init];
+                    _requestClient.delegate = self;
+                }
+                [_requestClient requestGet:@"app/services" withParameters:parameters];
+            }
+        }
+    
+    }else {
+        [SVProgressHUD showErrorWithStatus:@"输入的值无效，请重新输入！"];
+    }
+}
+
+bool btnclick = YES;
+#pragma 一键完成按钮
+- (void)keyBtnClick
+{
+    
+    if (AppDelegateInstance.userInfo == nil) {
+        
+          [ReLogin outTheTimeRelogin:self];
+        return;
+    }
+    
+    QCheckBox *checkbox1  = (QCheckBox *)[self.view viewWithTag:101];
+    
+    if(YES == btnclick){
+        
+        [_keyBtn setTitle:@"一键清除" forState:UIControlStateNormal];
+        btnclick = NO;
+        
+        _validType = 0;
+        _validDate = 2;
+        _bidAmount.text = @"200";
+        _rateStart.text = @"2";
+        _rateEnd.text = @"8";
+        _deadlineStart = 2;
+        _deadlineEnd = 6;
+        _creditStart = 1;
+        _creditEnd = 7;
+        _remandAmount.text = @"1000";
+        _minAmount.text = @"200";
+        _maxAmount.text = @"1000";
+        _ordinary.checked = YES;
+        checkbox1.checked = YES;
+        
+        [_validityCombo setLabelText:[[selectArr objectAtIndex:2] objectAtIndex:_validDate - 1]];
+        [_minPeriod setLabelText:[[selectArr objectAtIndex:0] objectAtIndex:_deadlineStart - 1]];
+        [_maxPeriod setLabelText:[[selectArr objectAtIndex:0] objectAtIndex:_deadlineEnd - 1]];
+        [_minCredit setLabelText:[creditRating objectAtIndex:_creditStart - 1]];
+        [_maxCredit setLabelText:[creditRating objectAtIndex:_creditEnd - 1]];
+    }else{
+        
+        [_keyBtn setTitle:@"一键完成" forState:UIControlStateNormal];
+        btnclick = YES;
+        
+        _validType = 0;
+        _validDate = 0;
+        _bidAmount.text = @"";
+        _rateStart.text = @"";
+        _rateEnd.text = @"";
+        _deadlineStart = 0;
+        _deadlineEnd = 0;
+        _creditStart = 0;
+        _creditEnd = 0;
+        _remandAmount.text = @"";
+        _minAmount.text = @"";
+        _maxAmount.text = @"";
+        _net.checked = NO;
+        _credit.checked = NO;
+        _ordinary.checked = NO;
+        checkbox1.checked = NO;
+        
+        [_validityCombo setLabelText:@"- 请选择 -"];
+        [_minPeriod setLabelText:@"- 请选择 -"];
+        [_maxPeriod setLabelText:@"- 请选择 -"];
+        [_minCredit setLabelText:@"- 请选择 -"];
+        [_maxCredit setLabelText:@"- 请选择 -"];
+    }
+}
+
+#pragma mark 点击空白处收回键盘
+- (void)ControlAction
+{
+    
+    for (UITextField *textField in [_scrollView subviews])
+    {
+        if ([textField isKindOfClass: [UITextField class]]) {
+            
+            [textField  resignFirstResponder];
+        }
+    }
+    
+}
+
+
+#pragma 输入框代理
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    
+    return YES;
+}
+
+
+#pragma mark - 单选框选中触发方法
+- (void)didSelectedCheckBox:(QCheckBox *)checkbox checked:(BOOL)checked {
+    DLOG(@"did tap on CheckBox:%@ checked:%d", checkbox.titleLabel.text, checked);
+    
+    QCheckBox *checkbox1  = (QCheckBox *)[self.view viewWithTag:101];
+    QCheckBox *checkbox2  = (QCheckBox *)[self.view viewWithTag:102];
+    
+    int type, type1;
+   
+    type = type1 = 2;
+    
+    // 天 和 月 单选
+    if (checkbox.tag==101&&checkbox.checked ==1) {
+        [_validityCombo setLabelText:[[selectArr objectAtIndex:2] objectAtIndex:0]];
+        checkbox2.checked = NO;
+        type = 0;
+        [_validityCombo setArrayData:[selectArr objectAtIndex:2]];
+        
+    }else if (checkbox.tag==101&&checkbox.checked ==0) {
+        type = 2;
+        checkbox2.checked = YES;
+        [_validityCombo setArrayData:[selectArr objectAtIndex:1]];
+      
+    }
+    
+    if (checkbox.tag==102&&checkbox.checked ==1) {
+        [_validityCombo setLabelText:[[selectArr objectAtIndex:1] objectAtIndex:0]];
+        checkbox1.checked = NO;
+        type1 = 1;
+        [_validityCombo setArrayData:[selectArr objectAtIndex:1]];
+        
+    }else if (checkbox.tag==102&&checkbox.checked ==0) {
+        type1 = 2;
+        checkbox1.checked = YES;
+        [_validityCombo setArrayData:[selectArr objectAtIndex:2]];
+    }
+    
+    
+    if (checkbox.tag== 2220&&checkbox.checked ==1) {
+        
+  
+        [bType addObject:@"1"];
+        
+    }else if (checkbox.tag== 2220&&checkbox.checked ==0) {
+        if (bType.count) {
+            for (int i=0; i<bType.count; i++) {
+                NSString *str = [bType objectAtIndex:i];
+                if ([str isEqualToString:@"1"]) {
+                    [bType removeObject:str];
+                }
+            }
+        }
+       
+    }
+    
+    
+    if (checkbox.tag== 2221&&checkbox.checked ==1) {
+        
+        
+        [bType addObject:@"2"];
+        
+    }else if (checkbox.tag== 2221&&checkbox.checked ==0) {
+        if (bType.count) {
+            for (int i=0; i<bType.count; i++) {
+                NSString *str = [bType objectAtIndex:i];
+                if ([str isEqualToString:@"2"]) {
+                    [bType removeObject:str];
+                }
+            }
+        }
+        
+    }
+    
+    
+    if (checkbox.tag==2222&&checkbox.checked ==1) {
+        
+        [bType addObject:@"3"];
+        
+    }else if (checkbox.tag==2222&&checkbox.checked ==0) {
+        if (bType.count) {
+            for (int i=0; i<bType.count; i++) {
+                NSString *str = [bType objectAtIndex:i];
+                if ([str isEqualToString:@"3"]) {
+                    [bType removeObject:str];
+                }
+            }
+        }
+        
+    }
+    
+    // 根据选中的状态，识别有效期类型（0：天  1：月）
+    if (type == 0) {
+        _validType = 0;
+        DLOG(@"xuan zhong le day");
+    }else if (type1 == 1)
+    {
+        _validType = 1;
+        DLOG(@"xuan zhong le mouth");
+    }
+    
+}
+
+
+#pragma 返回按钮触发方法
+- (void)backClick
+{
+      [self dismissViewControllerAnimated:YES completion:^(){}];
+}
+
+#pragma 加载页面数据
+- (void)setViewValue {
+    
+    for (int i = 0; i < creditRatingValue.count; i ++ ) {
+        if (_creditStart == [creditRatingValue[i] intValue]) {
+            
+            DLOG(@"_minCredit - %@", [creditRating objectAtIndex:i]);
+            [_minCredit setLabelText:[creditRating objectAtIndex:i]];
+        }
+        if (_creditEnd == [creditRatingValue[i] intValue]) {
+            
+            DLOG(@"_maxCredit - %@", [creditRating objectAtIndex:i]);
+            [_maxCredit setLabelText:[creditRating objectAtIndex:i]];
+        }
+    }
+    
+    DLOG(@"_deadlineStart - %@", @(_deadlineStart));
+    DLOG(@"_deadlineEnd - %@", @(_deadlineEnd));
+    DLOG(@" +++++++  - %@", [[selectArr objectAtIndex:0] objectAtIndex:_deadlineStart]);
+    DLOG(@"_deadlineStart - %@", @(_validDate));
+    
+    [_minPeriod setLabelText:[[selectArr objectAtIndex:0] objectAtIndex:_deadlineStart - 1]];
+    [_maxPeriod setLabelText:[[selectArr objectAtIndex:0] objectAtIndex:_deadlineEnd - 1]];
+    
+    QCheckBox *Qcheckbox1  = (QCheckBox *)[self.view viewWithTag:101];
+    QCheckBox *Qcheckbox2  = (QCheckBox *)[self.view viewWithTag:102];
+    
+    if (_validType == 0) {
+        Qcheckbox1.checked = YES;
+        Qcheckbox2.checked = NO;
+        [_validityCombo setLabelText:[[selectArr objectAtIndex:2] objectAtIndex:_validDate - 1]];
+    }else if (_validType == 1){
+        Qcheckbox1.checked = NO;
+        Qcheckbox2.checked = YES;
+        [_validityCombo setLabelText:[[selectArr objectAtIndex:1] objectAtIndex:_validDate - 1]];
+    }
+    
+    DLOG(@"_borrowtype -> %@", _borrowtype);
+    
+    for (NSString *str in _borrowtype) {
+        if ([str isEqualToString:@"1"]) {
+            _ordinary.checked = YES;
+        }
+        if ([str isEqualToString:@"2"]) {
+            _credit.checked = YES;
+        }
+        if ([str isEqualToString:@"3"]) {
+            _net.checked = YES;
+        }
+    }
+}
+
+#pragma  mark UIScrollViewdellegate
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    _minPeriod.table.frame = CGRectMake(_minPeriod.frame.origin.x, _minPeriod.frame.origin.y+20-scrollView.contentOffset.y, _minPeriod.frame.size.width, 90);
+    _maxPeriod.table.frame = CGRectMake(_maxPeriod.frame.origin.x, _maxPeriod.frame.origin.y+20-scrollView.contentOffset.y, _maxPeriod.frame.size.width, 90);
+    _validityCombo.table.frame = CGRectMake(_validityCombo.frame.origin.x, _validityCombo.frame.origin.y+20-scrollView.contentOffset.y, _validityCombo.frame.size.width, 90);
+    _minCredit.table.frame = CGRectMake(_minCredit.frame.origin.x, _minCredit.frame.origin.y+20-scrollView.contentOffset.y, _minCredit.frame.size.width, 90);
+    _maxCredit.table.frame = CGRectMake(_maxCredit.frame.origin.x, _maxCredit.frame.origin.y+20-scrollView.contentOffset.y, _maxCredit.frame.size.width, 90);
+}
+
+#pragma mark - requestData
+- (void)requestData
+{
+    if (AppDelegateInstance.userInfo == nil) {
+        
+          [ReLogin outTheTimeRelogin:self];        
+        return;
+    }else {
+        status = 1;
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        
+        [parameters setObject:@"63" forKey:@"OPT"];
+        [parameters setObject:@"" forKey:@"body"];
+        [parameters setObject:AppDelegateInstance.userInfo.userId forKey:@"id"];
+        
+        if (_requestClient == nil) {
+            _requestClient = [[NetWorkClient alloc] init];
+            _requestClient.delegate = self;
+        }
+        [_requestClient requestGet:@"app/services" withParameters:parameters];
+    }
+}
+
+#pragma mark HTTPClientDelegate 网络数据回调代理
+-(void) startRequest
+{
+ 
+}
+
+// 返回成功
+-(void) httpResponseSuccess:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didSuccessWithObject:(id)obj
+{
+    isTwoClick = YES;
+    NSDictionary *dics = obj;
+    
+    if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-1"]) {
+        DLOG(@"返回成功  msg -> %@",[obj objectForKey:@"msg"]);
+        
+        if (status == 1) {
+            DLOG(@"进入投标机器人页面");
+            
+            _moneylabel.text = [NSString stringWithFormat:@"%.2f元", [[obj objectForKey:@"balance"] floatValue]];
+            _robotStatus = [[obj objectForKey:@"robotStatus"] intValue];
+            _borrowtype = [obj objectForKey:@"loanType"];
+            DLOG(@"_robotStatus -> %@", @(_robotStatus));
+            
+            NSArray *collections = [obj objectForKey:@"creditLevelList"];
+            for (NSDictionary *item in collections) {
+                [creditRating addObject:[item objectForKey:@"optionText"]];
+                [creditRatingValue addObject:[item objectForKey:@"optionValue"]];
+            }
+            
+            // 2. 为未开启投标机器人 0. 关闭机器人  1. 开启机器人
+            switch (_robotStatus) {
+                case 0:
+                {
+                    [_startBtn setTitle:@"开启投标机器人" forState:UIControlStateNormal];
+                    _statelabel.text = @"关闭状态";
+                    startclick = YES;
+                    status = 3;
+                    
+                    [_keyBtn setTitle:@"一键清除" forState:UIControlStateNormal];
+                    btnclick = NO;
+                    
+                    NSArray *coll = [obj objectForKey:@"robot"];
+                    DLOG(@"coll -> %@", coll);
+
+                    _robotId = [[[obj objectForKey:@"robot"] objectForKey:@"id"] intValue];
+                    _validType = [[[obj objectForKey:@"robot"] objectForKey:@"valid_type"] intValue];
+                    _validDate = [[[obj objectForKey:@"robot"] objectForKey:@"valid_date"] intValue];
+                    _deadlineStart = [[[obj objectForKey:@"robot"] objectForKey:@"min_period"] intValue];
+                    _deadlineEnd = [[[obj objectForKey:@"robot"] objectForKey:@"max_period"] intValue];
+                    if (_deadlineEnd == 24) {
+                        _deadlineEnd = 13;
+                    }
+                    _creditStart = [[[obj objectForKey:@"robot"] objectForKey:@"min_credit_level_id"] intValue];
+                    _creditEnd = [[[obj objectForKey:@"robot"] objectForKey:@"max_credit_level_id"] intValue];
+        
+                    _bidAmount.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"amount"]];
+                    _rateStart.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"min_interest_rate"]];
+                    _rateEnd.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"max_interest_rate"]];
+                    _remandAmount.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"retention_amout"]];
+                    _minAmount.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"min_amount"]];
+                    _maxAmount.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"max_amount"]];
+        
+                    DLOG(@"%@  -  %@  -  %@  -  %@", @(_deadlineStart), @(_deadlineEnd), @(_creditStart), @(_creditEnd));
+                    
+                    [self setViewValue];
+                }
+                    break;
+                case 1:
+                {
+                    [_startBtn setTitle:@"关闭投标机器人" forState:UIControlStateNormal];
+                    _statelabel.text = @"开启状态";
+                    startclick = NO;
+                    status = 2;
+                    [_keyBtn setTitle:@"一键清除" forState:UIControlStateNormal];
+                    btnclick = NO;
+                    
+                    NSArray *coll = [obj objectForKey:@"robot"];
+                    DLOG(@"coll -> %@", coll);
+                    
+                    _robotId = [[[obj objectForKey:@"robot"] objectForKey:@"id"] intValue];
+                    _validType = [[[obj objectForKey:@"robot"] objectForKey:@"valid_type"] intValue];
+                    _validDate = [[[obj objectForKey:@"robot"] objectForKey:@"valid_date"] intValue];
+                    _deadlineStart = [[[obj objectForKey:@"robot"] objectForKey:@"min_period"] intValue];
+                    _deadlineEnd = [[[obj objectForKey:@"robot"] objectForKey:@"max_period"] intValue];
+                    if (_deadlineEnd == 24) {
+                        _deadlineEnd = 13;
+                    }
+                    _creditStart = [[[obj objectForKey:@"robot"] objectForKey:@"min_credit_level_id"] intValue];
+                    _creditEnd = [[[obj objectForKey:@"robot"] objectForKey:@"max_credit_level_id"] intValue];
+                    
+                    _bidAmount.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"amount"]];
+                    _rateStart.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"min_interest_rate"]];
+                    _rateEnd.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"max_interest_rate"]];
+                    _remandAmount.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"retention_amout"]];
+                    _minAmount.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"min_amount"]];
+                    _maxAmount.text = [NSString stringWithFormat:@"%@", [[obj objectForKey:@"robot"] objectForKey:@"max_amount"]];
+                    
+                   
+                    DLOG(@"%@  -  %@  -  %@  -  %@", @(_deadlineStart), @(_deadlineEnd), @(_creditStart), @(_creditEnd));
+                    
+                    [self setViewValue];
+                }
+                    break;
+                case 2:
+                {
+                    [_keyBtn setTitle:@"一键完成" forState:UIControlStateNormal];
+                    btnclick = YES;
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+        }else if (status == 2) {
+            DLOG(@"开启投标机器人成功");
+            [SVProgressHUD showSuccessWithStatus:[obj objectForKey:@"msg"]];
+        }else if (status == 3){
+            DLOG(@"关闭投标机器人成功");
+           [SVProgressHUD showSuccessWithStatus:[obj objectForKey:@"msg"]];
+        }
+            
+        
+    }else if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-2"]) {
+        
+        [ReLogin outTheTimeRelogin:self];
+    }else {
+        DLOG(@"返回失败  msg -> %@",[obj objectForKey:@"msg"]);
+        
+       [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+    }
+}
+
+// 返回失败
+-(void) httpResponseFailure:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didFailWithError:(NSError *)error
+{
+    // 服务器返回数据异常
+//    [SVProgressHUD showErrorWithStatus:@"网络异常"];
+}
+
+// 无可用的网络
+-(void) networkError
+{
+    [SVProgressHUD showErrorWithStatus:@"无可用网络"];
+}
+
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (_requestClient != nil) {
+        [_requestClient cancel];
+    }
+}
+
+@end

@@ -1,0 +1,278 @@
+//
+//  NetWorkClient.m
+//  Shove
+//
+//  Created by 李小斌 on 14-9-22.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+
+#import "NetWorkClient.h"
+#import "NetWorkConfig.h"
+#import <SystemConfiguration/SystemConfiguration.h>
+#import "MyWebViewController.h"
+#import "OpenAccountViewController.h"
+#import "MyRechargeViewController.h"
+#import "InvestmentViewController.h" // 20160122
+#import "AJDailyEarningRepayController.h" // 20160122
+#import "AJInvestChildController.h" // 20160122
+#import "JSONKit.h"
+@interface NetWorkClient () <UIAlertViewDelegate>
+
+@property (nonatomic, strong) NSURLSessionDataTask *dataTask;
+
+@end
+
+@implementation NetWorkClient
+
+- (instancetype)init
+{
+    self = [super initWithBaseURL:[NSURL URLWithString:Baseurl]];
+    if (self) {
+        self.requestSerializer = [AFJSONRequestSerializer serializer];
+        self.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/plain"];
+    }
+    return self;
+}
+
+- (NSURLSessionDataTask *) requestGet:(NSString *)URLString withParameters:(NSDictionary *)parameters
+{
+    NSString *restUrl = [ShoveGeneralRestGateway buildUrl:URLString key:MD5key parameters:parameters];
+    
+    DLOG(@"restUrl -> %@/%@", Baseurl, restUrl);
+    
+
+    if (![self isNetworkEnabled]) {
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(networkError)]) {
+            [self.delegate networkError];
+        }
+    }else{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(startRequest)]) {
+            [self.delegate startRequest];
+        }
+
+        _dataTask = [self GET:restUrl parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+            
+        DLOG(@"[NetWorkClient] -> task.response==============\n%@\n====================", task.response);
+
+        if (([self.delegate isKindOfClass:[InvestmentViewController class]] || [self.delegate isKindOfClass:[AJDailyEarningRepayController class]] || [self.delegate isKindOfClass:[AJInvestChildController class]] ) &&  [self.delegate respondsToSelector:@selector(httpResponseSuccessWithParam:dataTask:didSuccessWithObject:)]) {
+            [self.delegate httpResponseSuccessWithParam:parameters dataTask:task didSuccessWithObject:responseObject];
+        }else{
+            if (self.delegate && [self.delegate respondsToSelector:@selector(httpResponseSuccess:dataTask:didSuccessWithObject:)]) {
+                [self.delegate httpResponseSuccess:self dataTask:task didSuccessWithObject:responseObject];
+            }
+        }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            
+            if (([self.delegate isKindOfClass:[InvestmentViewController class]] || [self.delegate isKindOfClass:[AJDailyEarningRepayController class]]|| [self.delegate isKindOfClass:[AJInvestChildController class]]) &&  [self.delegate respondsToSelector:@selector(httpResponseFailureWithParam:dataTask:didFailWithError:)]) {
+                
+                [self.delegate httpResponseFailureWithParam:parameters dataTask:task didFailWithError:error];
+            }else{
+                if (self.delegate && [self.delegate respondsToSelector:@selector(httpResponseSuccess:dataTask:didSuccessWithObject:)]) {
+                    [self.delegate httpResponseFailure:self dataTask:task didFailWithError:error];
+                }
+            }
+        }];
+
+    }
+    return _dataTask;
+}
+
+/**
+ *    发送支付操作请求
+ *
+ *  @param controller ViewController
+ *  @param parameters   请求参数
+ *  @param type       操作类型
+ //1.开户 2.充值 3.投标 4.提现 5.绑定银行卡 6.债权转让竞拍确认（竟价）7.债权转让竞拍确认受让（定向）8.还款
+ *  @param level      controller级数 无特殊跳转，默认0
+ *
+ *  @return NSURLSessionDataTask
+ */
+- (NSURLSessionDataTask *)requestGet:(UIViewController *)controller withParameters:(NSDictionary *)parameters payType:(NSInteger) type navLevel:(NSInteger)level{
+    NSString *restUrl = [ShoveGeneralRestGateway buildUrl:@"app/services" key:MD5key parameters:parameters];
+    
+    self.controller = controller;
+    self.level = level;
+    
+    DLOG(@"restUrl -> %@/%@", Baseurl, restUrl);
+    
+    if (![self isNetworkEnabled]) {
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(networkError)]) {
+            [self.delegate networkError];
+        }
+    }
+    else{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(startRequest)]) {
+            [self.delegate startRequest];
+        }
+        
+        _dataTask = [self GET:restUrl parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+            
+            if (self.delegate && [self.delegate respondsToSelector:@selector(httpResponseSuccess:dataTask:didSuccessWithObject:)]) {
+                //需要改变View状态时调用
+                //[self.delegate httpResponseSuccess:self dataTask:task didSuccessWithObject:responseObject];
+                [self processPayment:controller withParameters:responseObject payType:type];
+//                NSDictionary *dics = responseObject;
+//                DLOG(@"===%@=======", dics);
+                
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            if (self.delegate && [self.delegate respondsToSelector:@selector(httpResponseSuccess:dataTask:didSuccessWithObject:)]) {
+                [self.delegate httpResponseFailure:self dataTask:task didFailWithError:error];
+            }
+        }];
+        
+    }
+    return _dataTask;
+}
+
+/**
+ *  处理支付响应的参数
+ *
+ *  @param controller ViewController
+ *  @param obj        响应参数
+ *  @param type       操作类型
+ //1.开户 2.充值 3.投标 4.提现 5.绑定银行卡 6.债权转让竞拍确认（竟价）7.债权转让竞拍确认受让（定向）8.还款
+ */
+- (void) processPayment:(UIViewController *) controller withParameters:(NSDictionary *)obj payType:(NSInteger) type {
+    NSLog(@"%s", __FUNCTION__);
+    
+    NSInteger error = [obj intForKey:@"error"];
+    if (error == -1)
+    {
+        //        if (![[obj objectForKey:@"htmlParam"]isEqual:[NSNull null]] && [obj objectForKey:@"htmlParam"] != nil)
+        if (![obj isNullForKey:@"htmlParam"])
+        {
+            NSString *htmlParam = [NSString stringWithFormat:@"%@",[obj objectForKey:@"htmlParam"]];
+            MyWebViewController *web = [[MyWebViewController alloc]init];
+            web.html = htmlParam;
+            web.type = type;
+            web.level = self.level;
+            [self.controller.navigationController pushViewController:web animated:YES];
+        }else{
+            [SVProgressHUD showImage:nil status:[NSString stringWithFormat:@"%@",[obj objectForKey:@"msg"]]];
+        }
+        
+    }
+    //[error isEqualToString:@"-31"]
+    else if (error == -31){  //未开通托管用户
+#warning 弹框
+        
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        //接口由176--->201
+        params[@"body"] = @"";
+        [params setObject:@"176" forKey:@"OPT"];
+        [params setObject:AppDelegateInstance.userInfo.userId forKey:@"userId"];
+        [self requestGet:@"app/services" withParams:params];
+    }else if (error  == -999) //充值
+    {
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"提示" message:@"可用余额不足，是否现在充值？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alertView show];
+        
+    }else if (error == -2) { //登录过期，需重新登录
+        
+        [ReLogin outTheTimeRelogin:controller];
+    }else{
+        
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+    }
+    
+}
+
+
+/**
+ * 汇付开户时在不需要跳转到OpenAccountViewController.h发送请求，
+ * 
+ */
+- (NSURLSessionDataTask *)requestGet:(NSString *)URLString withParams:(NSDictionary *)parameters
+{
+    NSString *restUrl = [ShoveGeneralRestGateway buildUrl:URLString key:MD5key parameters:parameters];
+    
+    DLOG(@"restUrl -> %@/%@", Baseurl, restUrl);
+    if (![self isNetworkEnabled]) {
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(networkError)]) {
+            [self.delegate networkError];
+        }
+    }else{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(startRequest)]) {
+            [self.delegate startRequest];
+        }
+        
+        _dataTask = [self GET:restUrl parameters:nil success:^(NSURLSessionDataTask *task, id obj) {
+            NSDictionary *dics = obj;
+            
+            NSString *error = [NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]];
+            NSString *msg = [NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]];
+            
+            if ([error isEqualToString:@"-1"]) {
+                //跳转开户
+                if (![[obj objectForKey:@"htmlParam"]isEqual:[NSNull null]] && [obj objectForKey:@"htmlParam"] != nil)
+                {
+                    NSString *htmlParam = [NSString stringWithFormat:@"%@",[obj objectForKey:@"htmlParam"]];
+                    MyWebViewController *web = [[MyWebViewController alloc]init];
+                    web.html = htmlParam;
+                    web.type = TYPE_OPEN_ACCOUNT;
+                    web.level = self.level;
+                    [self.controller.navigationController pushViewController:web animated:YES];
+                }else{
+                    [SVProgressHUD showImage:nil status:msg];
+                }
+                
+            } else {
+                // 服务器返回数据异常
+                [SVProgressHUD showErrorWithStatus:msg];
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            
+            [SVProgressHUD showErrorWithStatus:[error debugDescription]];
+        }];
+        
+    }
+    return _dataTask;
+
+}
+
+#pragma mark 确认充值跳转
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    MyRechargeViewController *RechargeView = [[MyRechargeViewController alloc] init];
+    RechargeView.level = self.level+1;
+    [self.controller.navigationController pushViewController:RechargeView animated:YES];;
+    
+}
+
+
+//-判断当前网络是否可用
+-(BOOL) isNetworkEnabled
+{
+    BOOL bEnabled = FALSE;
+    NSString *url = @"www.baidu.com";
+    SCNetworkReachabilityRef ref = SCNetworkReachabilityCreateWithName(NULL, [url UTF8String]);
+    SCNetworkReachabilityFlags flags;
+    
+    bEnabled = SCNetworkReachabilityGetFlags(ref, &flags);
+    
+    CFRelease(ref);
+    if (bEnabled) {
+        BOOL flagsReachable = ((flags & kSCNetworkFlagsReachable) != 0);
+        BOOL connectionRequired = ((flags & kSCNetworkFlagsConnectionRequired) != 0);
+        BOOL nonWiFi = flags & kSCNetworkReachabilityFlagsTransientConnection;
+        bEnabled = ((flagsReachable && !connectionRequired) || nonWiFi) ? YES : NO;
+    }
+    
+    return bEnabled;
+}
+
+-(void)cancel
+{
+    if (_dataTask != nil) {
+        [_dataTask cancel];
+    }
+}
+
+@end

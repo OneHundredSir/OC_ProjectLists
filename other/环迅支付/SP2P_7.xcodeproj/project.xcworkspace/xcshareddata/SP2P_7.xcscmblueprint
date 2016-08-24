@@ -1,0 +1,35 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "20e5cffd-2dbc-0546-b076-304169ced6dd++1255",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++1255" : {
+
+    },
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++8516" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++1255" : 0,
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++8516" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "07B7444A-C4E7-460F-9373-B5DEF698D417",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++1255" : "sp2p7.3\/",
+    "20e5cffd-2dbc-0546-b076-304169ced6dd++8516" : "sp2p7\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SP2P_7",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "SP2P_7.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/svn.products.shovesoft.com:443\/svn\/SP2P",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "20e5cffd-2dbc-0546-b076-304169ced6dd++1255"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/svn.products.shovesoft.com:443\/svn\/SP2P",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "20e5cffd-2dbc-0546-b076-304169ced6dd++8516"
+    }
+  ]
+}

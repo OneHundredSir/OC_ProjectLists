@@ -1,0 +1,20 @@
+//
+//  AJHomeHeaderView.h
+//  SP2P_7
+//
+//  Created by Ajax on 16/1/14.
+//  Copyright © 2016年 EIMS. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+#import "AdScrollView.h"
+
+typedef void(^imgSingleTapBlock)(AdvertiseGallery *item);
+typedef void(^btnClickBlock)(UIButton *sender);
+@interface AJHomeHeaderView : UIView
+@property (nonatomic, copy) imgSingleTapBlock tapImgBlock;
+@property (nonatomic, copy) btnClickBlock loginRegisterBlock;
+- (instancetype)initWithHeight:(CGFloat)height imageItems:(NSArray *)items;
+- (void)updateViewsContent:(NSArray *)aArray;
+@end

@@ -1,0 +1,291 @@
+//
+//  InfromationTabViewController.m
+//  SP2P_7
+//
+//  Created by 李小斌 on 14-6-9.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+
+#import "InfromationTabViewController.h"
+
+#import "XTListView.h"
+#import "iCarousel.h"
+#import "XTSegmentControl.h"
+
+#import "ColorTools.h"
+#import "MJRefresh.h"
+#import "CacheUtil.h"
+
+#define kTitleHeight 40.0
+
+#define kIOS7DIS(X) ([[NSNumber numberWithBool:kIS_IOS7] intValue] * X)
+#define kIS_IOS7    (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_6_1)
+
+@interface InfromationTabViewController ()<iCarouselDataSource,iCarouselDelegate,HTTPClientDelegate>
+{
+    NSMutableArray *_titleArrays;
+    NSMutableArray *_idArrays;
+    
+}
+@property (nonatomic,strong) XTSegmentControl *segmentControl;
+@property (nonatomic,strong) XTListView *listView1;
+@property (nonatomic,strong) NSMutableArray *tempArr;
+@property (nonatomic,copy) NSString *segmentFileName;
+
+@property(nonatomic ,strong) NetWorkClient *requestClient;
+@property (nonatomic , strong) iCarousel *carousel;
+
+@end
+
+@implementation InfromationTabViewController
+
+
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    [self initData];
+
+}
+
+/**
+ 初始化数据
+ */
+- (void)initData
+{
+     self.view.backgroundColor = KblackgroundColor;
+    _titleArrays = [[NSMutableArray alloc] init];
+    _idArrays = [[NSMutableArray alloc] init];
+    _tempArr = [[NSMutableArray alloc] init];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    //财富资讯接口（opt=130）
+    [parameters setObject:@"130" forKey:@"OPT"];
+    [parameters setObject:@"" forKey:@"body"];
+    
+    _segmentFileName = [CacheUtil creatCacheFileName:parameters];
+    
+    if (_requestClient == nil) {
+        _requestClient = [[NetWorkClient alloc] init];
+        _requestClient.delegate = self;
+       
+    }
+    [_requestClient requestGet:@"app/services" withParameters:parameters];
+
+}
+
+/**
+ 初始化数据
+ */
+- (void)initView
+{
+
+    // 水平滚动的视图
+    _carousel = [[iCarousel alloc] initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, CGRectGetHeight(self.view.bounds) - 104)];
+    _carousel.backgroundColor = [UIColor whiteColor];
+    _carousel.dataSource = self;
+    _carousel.delegate = self;
+    _carousel.decelerationRate = 0.7;
+    _carousel.type = iCarouselTypeLinear;
+    _carousel.pagingEnabled = YES;
+    _carousel.edgeRecognition = YES;
+    _carousel.bounceDistance = 0.4;
+    [self.view addSubview:_carousel];
+
+    
+    // 标题栏选项卡背景
+    UIView *titleBg = [[UIView alloc] initWithFrame:CGRectMake(0, kIOS7DIS(64), self.view.frame.size.width, kTitleHeight)];
+    titleBg.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:titleBg];
+
+    __weak typeof(_carousel) weakCarousel = _carousel;
+//    //  选项卡
+    
+    _segmentControl = [[XTSegmentControl alloc] initWithFrame:CGRectMake(0, kIOS7DIS(64), self.view.frame.size.width, kTitleHeight) Items:_titleArrays selectedBlock:^(NSInteger index) {
+        [weakCarousel scrollToItemAtIndex:index animated:NO];
+    }];
+//     _segmentControl.delegate = self;
+      [self.view addSubview:_segmentControl];
+  
+//   // 选显卡图片下拉选框
+//    UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-30, kIOS7DIS(64) + kTitleHeight*0.5 - 5, 15, 10)];
+//    arrow.image = [UIImage imageNamed:@"information_title_arrow"];
+//   [self.view addSubview:arrow];
+
+}
+
+-(void) readCache
+{
+    // 刷新前先加载缓存数据
+    NSString *path =[NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *cachePath = [path stringByAppendingPathComponent:_segmentFileName];// 合成归档保存的完整路径
+    NSDictionary *dics = [NSKeyedUnarchiver unarchiveObjectWithFile:cachePath];// 上一次缓存数据
+    [self processData:dics isCache:YES];// 读取上一次成功缓存的数据
+}
+
+
+
+#pragma HTTPClientDelegate 网络数据回调代理
+-(void) startRequest
+{
+//    [self readCache];
+
+}
+
+// 返回成功
+-(void) httpResponseSuccess:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didSuccessWithObject:(id)obj
+{
+    
+    DLOG(@"财富资讯 ID Is %@",obj);
+    [self processData:obj isCache:NO];// 读取当前请求到的数据
+    
+}
+
+
+-(void) processData:(NSDictionary *)dataDics isCache:(BOOL) isCache
+{
+    [_titleArrays removeAllObjects];
+    [_idArrays removeAllObjects];
+    if ([[NSString stringWithFormat:@"%@",[dataDics objectForKey:@"error"]] isEqualToString:@"-1"]) {
+        
+        if(!isCache){
+            // 非缓存数据，且返回的是-1 成功的数据，才更新数据源，否则不保存
+            NSString *path =[NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask, YES) objectAtIndex:0];
+            NSString *cachePath = [path stringByAppendingPathComponent:_segmentFileName];// 合成归档保存的完整路径
+            [NSKeyedArchiver archiveRootObject:dataDics toFile:cachePath];// 数据归档，存取缓存
+            
+        }
+        
+
+        NSArray *typeArr = [dataDics objectForKey:@"types"];
+        for (NSDictionary *dic in typeArr) {
+            
+            NSString *titleStr = [dic objectForKey:@"name"];
+            NSString *idStr = [dic objectForKey:@"id"];
+            [_titleArrays addObject:titleStr];
+            [_idArrays addObject:idStr];
+        }
+//        DLOG(@"栏目ID数组为%@",_idArrays);
+        
+        [_tempArr removeAllObjects];
+        NSArray *dataArr = [dataDics objectForKey:@"ads"];
+        if ([dataArr count]!=0) {
+            for (NSDictionary *item in dataArr)
+            {
+                AdvertiseGallery *bean = [[AdvertiseGallery alloc] init];
+                bean.title = [item objectForKey:@"title"];
+                if ([[item objectForKey:@"image_filename"] hasPrefix:@"http"]) {
+                    
+                    bean.image = [NSString stringWithFormat:@"%@",[item objectForKey:@"image_filename"]];
+                }else{
+                    
+                    bean.image = [NSString stringWithFormat:@"%@%@",Baseurl,[item objectForKey:@"image_filename"]];
+                }
+                bean.idStr = [item objectForKey:@"id"];
+                bean.tag = [_tempArr count] + 1;
+                [_tempArr addObject:bean];
+                
+            }
+            
+        }
+        [self initView];
+        
+    }else if ([[NSString stringWithFormat:@"%@",[dataDics objectForKey:@"error"]] isEqualToString:@"-2"]) {
+        
+        [ReLogin outTheTimeRelogin:self];
+    
+    }else{
+        if (!isCache) {
+            
+            DLOG(@"返回失败===========%@",[dataDics objectForKey:@"msg"]);
+             [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [dataDics objectForKey:@"msg"]]];
+            
+        }
+
+    }
+    
+}
+
+// 返回失败
+-(void) httpResponseFailure:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didFailWithError:(NSError *)error
+{
+//    [self readCache];
+    // 服务器返回数据异常
+//    [SVProgressHUD showErrorWithStatus:@"网络异常"];
+}
+
+// 无可用的网络
+-(void) networkError
+{
+ 
+//    [self readCache];
+    // 服务器返回数据异常
+    [SVProgressHUD showErrorWithStatus:@"无可用网络"];
+    
+}
+
+- (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
+{
+    return [_titleArrays count];
+}
+
+- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
+{
+    _listView1 = nil;
+    view = [[UIView alloc] initWithFrame:carousel.bounds];
+    _listView1 = [[XTListView alloc] initWithFrame:view.bounds];
+    //滚动栏数据数组
+    _listView1.tempArrays = _tempArr;
+    //广告栏数据处理
+    [_listView1 headerViewData];
+    //添加内容视图
+    [_listView1 addContentView];
+    //设置下拉刷新和上拉加载
+    [_listView1 setupRefresh];
+    //加载资讯列表数据
+    [_listView1 webData:[NSString stringWithFormat:@"%@",[_idArrays  objectAtIndex:index]]];
+    //获取各个新闻栏目的ID
+    _listView1.typeIdStr = [NSString stringWithFormat:@"%@",[_idArrays  objectAtIndex:index]];
+    //取得父视图的对象
+    _listView1.InformationView = (InformationViewController *)self.parentViewController;
+    _listView1.tag = index;
+    [view addSubview:_listView1];
+    
+    return view;
+}
+
+
+#pragma mark 滚动时调用方法
+- (void)carouselDidScroll:(iCarousel *)carousel
+{
+    if (_segmentControl) {
+        float offset = carousel.scrollOffset;
+        
+        if (offset > 0) {
+            [_segmentControl moveIndexWithProgress:offset];
+       
+        }
+    }
+}
+
+#pragma mark 滚动完成和选中栏目后调用的方法
+- (void)carouselDidEndScrollingAnimation:(iCarousel *)carousel
+{
+    if (_segmentControl) {
+        [_segmentControl endMoveIndex:carousel.currentItemIndex];
+    }
+    
+}
+
+
+#pragma mark 取消网络请求
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (_requestClient != nil) {
+        [_requestClient cancel];
+    }
+}
+
+@end

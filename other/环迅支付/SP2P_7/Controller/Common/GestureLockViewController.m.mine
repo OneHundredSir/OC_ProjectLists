@@ -1,0 +1,225 @@
+//
+//  GestureLockViewController.m
+//  SP2P_6.1
+//
+//  Created by 李小斌 on 14-6-23.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+
+#import "GestureLockViewController.h"
+
+#import "GestureLockView.h"
+
+#import "MainViewController.h"
+#import "ColorTools.h"
+#import <QuartzCore/QuartzCore.h>
+#import "UIImageView+WebCache.h"
+
+  int i=0;
+@interface GestureLockViewController ()<GestureLockViewDelegate>
+
+@property (nonatomic, strong)  GestureLockView *lockView;
+@property (nonatomic,strong) UIImageView *headView;
+@property (nonatomic,strong) UILabel *nameLabel;
+
+@end
+
+@implementation GestureLockViewController
+
+
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    self.navigationController.navigationBarHidden = YES;
+    
+    [self initView];
+    
+    
+}
+
+
+- (void)initView
+{
+    self.view.backgroundColor = SETCOLOR(25, 89, 156, 1.0);
+    [[UIApplication sharedApplication] setStatusBarHidden:TRUE];
+    
+    _headView = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width*0.5-37.5,45, 75, 75)];
+    _headView.layer.cornerRadius = 37.5;
+    [_headView setImageWithURL:[NSURL URLWithString:@"http://wenwen.soso.com/p/20120225/20120225173436-1394511427.jpg"]];
+    _headView.userInteractionEnabled = NO;
+    _headView.layer.masksToBounds = YES;
+    [self.view addSubview:_headView];
+    
+    
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width*0.5-40,120, 80, 30)];
+    _nameLabel.text = @"熊二默";
+    _nameLabel.textAlignment = NSTextAlignmentCenter;
+    _nameLabel.tag = 100;
+    _nameLabel.font = [UIFont fontWithName:@"Verdana-Bold" size:15.0];
+    _nameLabel.textColor = [UIColor whiteColor];
+    [self.view addSubview:_nameLabel];
+    
+    UIButton *forgetpwd = [UIButton buttonWithType:UIButtonTypeCustom];
+    forgetpwd.frame = CGRectMake(15, self.view.frame.size.height-40, 100, 15);
+    forgetpwd.titleLabel.font = [UIFont systemFontOfSize:13.0];
+    [forgetpwd setTitle:@"忘记手势密码" forState:UIControlStateNormal];
+    [forgetpwd setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [forgetpwd addTarget:self action:@selector(forgetBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:forgetpwd];
+    
+    
+    UIButton *otherBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    otherBtn.frame = CGRectMake(self.view.frame.size.width-120, self.view.frame.size.height-40, 100, 15);
+    otherBtn.titleLabel.font = [UIFont systemFontOfSize:13.0];
+    [otherBtn setTitle:@"其他账号登陆" forState:UIControlStateNormal];
+    [otherBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [otherBtn addTarget:self action:@selector(otherBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:otherBtn];
+    
+    
+    
+    self.lockView = [[GestureLockView alloc] initWithFrame:CGRectMake(0, -70, self.view.bounds.size.width, self.view.bounds.size.height)];
+    
+    self.lockView.normalGestureNodeImage = [UIImage imageNamed:@"gesture_node_normal.png"];
+    self.lockView.selectedGestureNodeImage = [UIImage imageNamed:@"gesture_node_selected.png"];
+    self.lockView.lineColor = [[ColorTools colorWithHexString:@"#00ff76"] colorWithAlphaComponent:0.3];
+    self.lockView.lineWidth = 8;
+    self.lockView.delegate = self;
+    self.lockView.contentInsets = UIEdgeInsetsMake(self.view.frame.size.height*0.5+10, self.view.frame.size.width*0.15, 60, self.view.frame.size.width*0.15);
+    
+    
+    [self.view addSubview:self.lockView];
+}
+
+
+#pragma mark -
+#pragma mark GesturelockView
+- (void)gestureLockView:(GestureLockView *)gestureLockView didBeginWithPasscode:(NSString *)passcode{
+    NSLog(@"%@",passcode);
+}
+
+
+- (void)gestureLockView:(GestureLockView *)gestureLockView didEndWithPasscode:(NSString *)passcode
+{
+    NSLog(@"%@",passcode);
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *PwdString = [defaults objectForKey:@"gesturepwd"];
+    NSLog(@"PWD is .......%@",PwdString);
+    if (![passcode isEqualToString:PwdString]) {
+        i++;
+        if (i<5) {
+            
+            UILabel *countLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width*0.5-90,150, 180, 30)];
+            countLabel.text = [NSString stringWithFormat:@"密码错误还可以尝试%d次",5-i];
+            countLabel.tag = 5-i;
+            countLabel.textAlignment = NSTextAlignmentCenter;
+            countLabel.font = [UIFont fontWithName:@"Verdana-Bold" size:15.0];
+            countLabel.textColor = [ColorTools colorWithHexString:@"#65a3e0"];
+            for (UILabel *label in [self.view subviews]) {
+                if ([label isKindOfClass:[UILabel class]]&&label.tag<5) {
+                    [label removeFromSuperview];
+                }
+            }
+            [self.view addSubview:countLabel];
+            
+        }
+        else
+        {
+            for (UILabel *label in [self.view subviews]) {
+                if ([label isKindOfClass:[UILabel class]]) {
+                    [label removeFromSuperview];
+                }
+            }
+            
+            UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"提示" message:@"已经超过限定次数，请通过忘记手势密码重新设置！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alertview show];
+    
+        }
+        
+        
+    }
+    
+    else
+    {
+        
+        
+        [_nameLabel removeFromSuperview];
+        [_lockView  removeFromSuperview];
+        for (UILabel *textlabel in [self.view subviews]) {
+            
+            if ([textlabel isKindOfClass:[UILabel class]]) {
+                
+                [textlabel removeFromSuperview];
+            }
+            
+        }
+        
+        [UIView animateWithDuration:1.0 animations:^{
+            _headView.center = CGPointMake(self.view.frame.size.width*0.5, self.view.frame.size.height*0.5);
+            
+            
+        } completion:^(BOOL finished) {
+            
+//            CATransition *animation = [CATransition animation];
+//            [animation setDuration:3.0];
+//            [animation setFillMode:kCAFillModeForwards];
+//            animation.delegate = self;
+//            animation.timingFunction=UIViewAnimationCurveEaseInOut;
+//            [animation setType:@"suckEffect"];// rippleEffect  cube  oglFlip
+//            animation.removedOnCompletion = YES;
+//            [animation setSubtype:kCATransitionFromTop];
+//            [self.view exchangeSubviewAtIndex:0 withSubviewAtIndex:1];
+//            [self.view.layer addAnimation:animation forKey:nil];
+            
+            
+            MainViewController *main = [[MainViewController alloc] rootViewController];
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:main];
+            [navigationController setNavigationBarHidden:YES];
+            [self presentViewController:navigationController animated:NO completion:nil];
+            
+            
+        }];
+        
+        
+        
+        
+        
+    }
+}
+
+- (void)gestureLockView:(GestureLockView *)gestureLockView didCanceledWithPasscode:(NSString *)passcode
+{
+    NSLog(@"%@",passcode);
+}
+
+
+#pragma  mark 使用其他账号登陆
+- (void)otherBtnClick
+{
+    
+    NSLog(@"使用其他账号登陆");
+    
+}
+
+
+
+
+#pragma  mark 忘记密码
+- (void)forgetBtnClick
+{
+    
+    NSLog(@"忘记密码按钮");
+    
+}
+
+#pragma  mark -
+#pragma  mark Animationdelegate
+- (void)animationDidStop:(CAAnimation *)theAnimation finished:(BOOL)flag
+{
+
+}
+
+@end
