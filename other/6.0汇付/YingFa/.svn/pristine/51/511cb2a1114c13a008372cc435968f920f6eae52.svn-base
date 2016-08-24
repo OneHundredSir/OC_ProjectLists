@@ -1,0 +1,630 @@
+//
+//  ReviewCourseDetailsViewController.m
+//  SP2P_6.1
+//
+//  Created by Jerry on 14-7-30.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+//  账户中心 -> 借款子账户 -> 资料审核 -> 资料审核详情
+
+#import "ReviewCourseDetailsViewController.h"
+#import "ColorTools.h"
+
+#import "ReviewCourseDetails.h"
+
+#import "NSString+Date.h"
+
+//[判断是否有效：3是失效,2是有效 否则无效]（加载图片的判断：0是未提交 1审核中 2已通过审核 3过期失效 4未通过审核）
+
+#define NO_Submitted 0// 未提交（无效）
+#define Review 1// 审核中 （无效）
+#define Success 2 // 已通过审核 （有效）
+#define Failure 3// 过期失效   （失效）
+#define Review_Failed 4// 未通过审核（无效）
+
+@interface ReviewCourseDetailsViewController ()<UITextFieldDelegate,UITextViewDelegate,UIActionSheetDelegate, HTTPClientDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+{
+    NSArray *titleArr;
+    
+    NSMutableArray *reviewArr;
+    NSInteger _typeNum;
+}
+
+@property(nonatomic, strong) UILabel *nameLabel;
+@property(nonatomic, strong) UILabel *stateLabel;
+@property(nonatomic, strong) UILabel *periodLabel;
+@property(nonatomic, strong) UILabel *creditScoreLabel;
+@property(nonatomic, strong) UILabel *expireTimeLabel;
+@property(nonatomic, strong) UILabel *timeLabel;
+@property(nonatomic, strong) UILabel *auditTimeLabel;
+@property(nonatomic, strong) UILabel *creditCycleLabel;
+@property(nonatomic, strong) UILabel *borrowTypeNameLabel;
+@property(nonatomic, strong) UILabel *suggestLabel;
+@property(nonatomic, strong) UILabel *suggestMark;
+@property (nonatomic, strong)UIScrollView *ScrollView;
+@property(nonatomic, strong) UIView *borrowTypeView;
+@property(nonatomic, strong) UIView *bottomView;
+@property(nonatomic ,copy) NSString *imgStr;
+@property(nonatomic ,copy) NSString *signStr;
+@property(nonatomic ,strong) NetWorkClient *requestClient;
+
+//@property(nonatomic, strong) ReviewCourseDetails *reviewCourseDetails;
+
+@end
+
+@implementation ReviewCourseDetailsViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // 初始化数据
+    [self initData];
+    
+    // 初始化视图
+    [self initView];
+    
+    [self requestData];
+}
+
+/**
+ * 初始化数据
+ */
+- (void)initData
+{
+    _typeNum = 0;
+    titleArr = @[@"审核材料科目:",@"有效期状态：",@"有效期：",@"信用积分：",@"有效到期时间：",@"提交资料时间：", @"审核通过时间：",@"审核周期：",@"关联借款标类型："];
+    reviewArr = [[NSMutableArray alloc] init];
+    _imgStr = [[NSString alloc] init];
+    _signStr = [[NSString alloc] init];
+}
+
+/**
+ 初始化数据
+ */
+- (void)initView
+{
+    
+    [self initNavigationBar];
+    self.view.backgroundColor = KblackgroundColor;
+    
+    //滚动视图
+    _ScrollView =[[UIScrollView alloc] initWithFrame:CGRectMake(0, -64, self.view.frame.size.width, self.view.frame.size.height+64)];
+    _ScrollView.userInteractionEnabled = YES;
+    _ScrollView.scrollEnabled = YES;
+    _ScrollView.showsHorizontalScrollIndicator = NO;
+    _ScrollView.showsVerticalScrollIndicator = NO;
+    _ScrollView.delegate = self;
+    _ScrollView.backgroundColor = KblackgroundColor;
+    _ScrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+80);
+    [self.view addSubview:_ScrollView];
+    
+    
+    for (int i = 0; i < [titleArr count]; i++) {
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        if (i == titleArr.count - 1){
+            titleLabel.frame = CGRectMake(15, 70 + i * 35, 120, 30);
+        }else {
+            titleLabel.frame = CGRectMake(15, 70 + i * 35, 100, 30);
+        }
+        titleLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+        titleLabel.textColor = [UIColor grayColor];
+        titleLabel.text = [titleArr objectAtIndex:i];
+        titleLabel.tag = 10 + i;
+        [_ScrollView addSubview:titleLabel];
+    }
+    if (_literatureAudit!= nil &&  _literatureAudit.status !=2 &&  _literatureAudit.status !=1) {
+        
+        _bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 44, self.view.frame.size.width, 44)];
+        _bottomView.backgroundColor = [UIColor whiteColor];
+        [self.view insertSubview:_bottomView aboveSubview:_ScrollView];
+        UIButton *tenderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        tenderBtn.frame = CGRectMake(self.view.frame.size.width*0.5-50, 8,100, 25);
+        tenderBtn.backgroundColor = GreenColor;
+        [tenderBtn setTitle:@"上  传" forState:UIControlStateNormal];
+        [tenderBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        tenderBtn.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:13.0];
+        [tenderBtn.layer setMasksToBounds:YES];
+        [tenderBtn.layer setCornerRadius:3.0];
+        [tenderBtn addTarget:self action:@selector(tenderBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [_bottomView addSubview:tenderBtn];
+    }
+   
+    
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:10].frame), CGRectGetMidY([self.view viewWithTag:10].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:10].frame) - 20, 30)];
+    _nameLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _nameLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_nameLabel];
+    
+    _stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:11].frame) - 15, CGRectGetMidY([self.view viewWithTag:11].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:11].frame) - 20, 30)];
+    _stateLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _stateLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_stateLabel];
+    
+    _periodLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:12].frame) - 45, CGRectGetMidY([self.view viewWithTag:12].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:12].frame) - 20, 30)];
+    _periodLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _periodLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_periodLabel];
+    
+    _creditScoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:13].frame) - 30, CGRectGetMidY([self.view viewWithTag:13].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:13].frame) - 20, 30)];
+    _creditScoreLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _creditScoreLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_creditScoreLabel];
+    
+    _expireTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:14].frame), CGRectGetMidY([self.view viewWithTag:14].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:14].frame) - 20, 30)];
+    _expireTimeLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _expireTimeLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_expireTimeLabel];
+    
+    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:15].frame), CGRectGetMidY([self.view viewWithTag:15].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:15].frame) - 20, 30)];
+    _timeLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _timeLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_timeLabel];
+    
+    _auditTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:16].frame), CGRectGetMidY([self.view viewWithTag:16].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:16].frame) - 20, 30)];
+    _auditTimeLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _auditTimeLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_auditTimeLabel];
+    
+    _creditCycleLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:17].frame) - 30, CGRectGetMidY([self.view viewWithTag:17].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:17].frame) - 20, 30)];
+    _creditCycleLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _creditCycleLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_creditCycleLabel];
+    
+    _borrowTypeNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self.view viewWithTag:18].frame), CGRectGetMidY([self.view viewWithTag:18].frame) - 15, self.view.frame.size.width - CGRectGetMaxX([self.view viewWithTag:18].frame) - 20, 30)];
+    _borrowTypeNameLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _borrowTypeNameLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_borrowTypeNameLabel];
+    
+    _borrowTypeView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    [_ScrollView addSubview:_borrowTypeView];
+    
+    _suggestMark = [[UILabel alloc] initWithFrame:CGRectZero];
+    _suggestMark.font = [UIFont boldSystemFontOfSize:14.0f];
+    _suggestMark.textColor = [UIColor grayColor];
+    _suggestMark.text = @"审核意见：";
+    [_ScrollView addSubview:_suggestMark];
+    
+    _suggestLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _suggestLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    _suggestLabel.textColor = [UIColor grayColor];
+    [_ScrollView addSubview:_suggestLabel];
+    
+}
+
+
+-(void) setView
+{
+
+    ReviewCourseDetails *_reviewCourseDetails = reviewArr[0];
+    
+    DLOG(@"_reviewCourseDetails.auditItemName -> %@", _reviewCourseDetails.auditItemName);
+    
+    if (_reviewCourseDetails.auditItemName!=nil && ![_reviewCourseDetails.auditItemName isEqual:[NSNull null]]) {
+        _nameLabel.text = _reviewCourseDetails.auditItemName;
+    }
+    
+    switch (_reviewCourseDetails.status) {
+        case NO_Submitted:
+            // 未提交（无效）
+            _stateLabel.text = @"无效";
+            break;
+        case Review:
+            // 审核中 （无效）
+            _stateLabel.text = @"无效";
+            break;
+        case Success:
+            // 已通过审核 （有效）
+            _stateLabel.text = @"有效";
+            break;
+        case Failure:
+            // 过期失效   （失效）
+            _stateLabel.text = @"失效";
+            break;
+        case Review_Failed:
+            // 未通过审核（无效）
+            _stateLabel.text = @"无效";
+            break;
+        default:
+            break;
+    }
+    _signStr = _reviewCourseDetails.signId;
+    _periodLabel.text = [NSString stringWithFormat:@"%ld 个月",(long)_reviewCourseDetails.period];
+    _creditScoreLabel.text = [NSString stringWithFormat:@"%ld 分",(long)_reviewCourseDetails.creditScore];
+    
+    if (_reviewCourseDetails.expireTime!=nil && ![_reviewCourseDetails.expireTime isEqual:[NSNull null]]) {
+        _expireTimeLabel.text = _reviewCourseDetails.expireTime;
+    }
+    
+    if (_reviewCourseDetails.time!=nil && ![_reviewCourseDetails.time isEqual:[NSNull null]]) {
+        _timeLabel.text = _reviewCourseDetails.time;
+    }
+    
+    if (_reviewCourseDetails.auditTime!=nil && ![_reviewCourseDetails.auditTime isEqual:[NSNull null]]) {
+        _auditTimeLabel.text = _reviewCourseDetails.auditTime;
+    }
+    
+    //    _creditCycleLabel.text = [NSString stringWithFormat:@"%d 个月",_reviewCourseDetails.creditCycle];
+    
+    DLOG(@"_reviewCourseDetails.productNames -> %@", _reviewCourseDetails.productNames);
+    if (_reviewCourseDetails.productNames!=nil && ![_reviewCourseDetails.productNames isEqual:[NSNull null]]) {
+        //        _borrowTypeNameLabel.text = _reviewCourseDetails.productNames;
+        
+        for (int i = 0; i < _reviewCourseDetails.productNames.count; i++) {
+            NSString *imageName = [[NSString alloc] init];
+            if ([[NSString stringWithFormat:@"%@",_reviewCourseDetails.productNames[i]] hasPrefix:@"http"]) {
+                
+                imageName = [NSString stringWithFormat:@"%@",_reviewCourseDetails.productNames[i]];
+                
+            }else{
+                
+                imageName = [NSString  stringWithFormat:@"%@%@", Baseurl, _reviewCourseDetails.productNames[i]];
+                
+            }
+            
+            
+            if (_reviewCourseDetails.productNames.count > 6) {
+                _borrowTypeView.frame = CGRectMake(15, 380, self.view.frame.size.width - 30, 60);
+            }else {
+                _borrowTypeView.frame = CGRectMake(15, 380, self.view.frame.size.width - 30, 30);
+            }
+            
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+            if (i < 7) {
+                imageView.frame = CGRectMake(i * 40, 0, 30, 30);
+                _suggestMark.frame = CGRectMake(15, 410, 100, 30);
+                _suggestLabel.frame = CGRectMake(85, 410, 100, 30);
+                
+            }else {
+                imageView.frame = CGRectMake((i - 7) * 40, 35, 30, 30);
+                _suggestMark.frame = CGRectMake(15, 445, 100, 30);
+                _suggestLabel.frame = CGRectMake(85, 445, 100, 30);
+            }
+            
+            [imageView sd_setImageWithURL:[NSURL URLWithString:imageName]];
+            
+            [_borrowTypeView addSubview:imageView];
+        }
+    }
+    
+}
+
+
+/**
+ * 初始化导航条
+ */
+- (void)initNavigationBar
+{
+    self.title = @"审核科目详情";
+    [self.navigationController.navigationBar setBarTintColor:KColor];
+    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                      [UIColor whiteColor], NSForegroundColorAttributeName,
+                                                                      [UIFont fontWithName:@"Arial-BoldMT" size:18.0], NSFontAttributeName, nil]];
+    
+    // 导航条返回按钮
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_back"]  style:UIBarButtonItemStyleDone target:self action:@selector(backClick)];
+    backItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setLeftBarButtonItem:backItem];
+    
+}
+
+#pragma 返回按钮触发方法
+- (void)backClick
+{
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
+#pragma 提交资料
+- (void)tenderBtnClick
+{
+    DLOG(@"提交资料按钮");
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"选择图片" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+    [actionSheet addButtonWithTitle:@"拍照"];
+    [actionSheet addButtonWithTitle:@"从手机相册选择"];
+    [actionSheet addButtonWithTitle:@"取消"];
+    actionSheet.destructiveButtonIndex = actionSheet.numberOfButtons - 1;
+    [actionSheet showInView:self.view];
+    
+}
+
+
+#pragma mark UIActionSheetDelegate
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.editing = YES;
+    imagePicker.allowsEditing = YES;
+    imagePicker.delegate = self;
+    
+    if (buttonIndex == 0)//照相机
+    {
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+        {
+            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            
+        }
+        else{
+            
+            [SVProgressHUD showErrorWithStatus:@"该设备没有摄像头"];
+            
+        }
+    }
+    if (buttonIndex == 1)
+    {
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    }
+    if (buttonIndex == 2)
+    {
+        
+    }
+}
+
+#pragma mark
+#pragma mark - UIImagePicker delegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+    [self performSelector:@selector(saveImage:) withObject:image afterDelay:0.5];
+}
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark - 上传图片
+- (void)saveImage:(UIImage *)image
+{
+    if (image!=nil) {
+        
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        [parameters setObject:@"1" forKey:@"type"];
+        
+        // 1. Create `AFHTTPRequestSerializer` which will create your request.
+        AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
+        
+        NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+        
+        // 2. Create an `NSMutableURLRequest`.
+        
+        NSMutableURLRequest *request = [serializer multipartFormRequestWithMethod:@"POST"
+                                                                        URLString:[NSString stringWithFormat:@"%@%@",Baseurl,@"/app/uploadPhoto"]
+                                                                       parameters:parameters
+                                                        constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                                            
+                                                            
+                                                            //上传时使用当前的系统事件作为文件名
+                                                            
+                                                            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                                                            
+                                                            formatter.dateFormat = @"yyyyMMddHHmmss";
+                                                            formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"];
+                                                            NSString *str = [formatter stringFromDate:[NSDate date]];
+                                                            
+                                                            NSString *fileName = [NSString stringWithFormat:@"%@.jpg", str];
+                                                            //
+                                                            
+                                                            
+                                                            [formData appendPartWithFileData:imageData
+                                                                                        name:@"imgFile"
+                                                                                    fileName:fileName
+                                                                                    mimeType:@"image/jpeg"];
+                                                        } error:nil];
+        
+        // 3. Create and use `AFHTTPRequestOperationManager` to create an `AFHTTPRequestOperation` from the `NSMutableURLRequest` that we just created.
+        DLOG(@">>>>>>>>request>>>>>>%@<<<<<<<", request);
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+        AFHTTPRequestOperation *operation =
+        [manager HTTPRequestOperationWithRequest:request
+                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                             DLOG(@"Success >>>>>>>>>>>>>>>>>%@", responseObject);
+                                             NSDictionary *dic = (NSDictionary *)responseObject;
+                                             
+                                             if([[dic objectForKey:@"error"] integerValue] == -1)
+                                             {
+                                                   _imgStr =[dic objectForKey:@"filename"];
+//                                                 [SVProgressHUD showSuccessWithStatus:@"上传成功!"];
+                                                   [self postData];
+                                                 
+                                             }else{
+                                                 
+                                                 [SVProgressHUD showErrorWithStatus:[dic objectForKey:@"msg"]];
+                                                 
+                                                 
+                                             }
+                                             
+                                             
+                                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                             DLOG(@"Failure >>>>>>>>>>>>>>>>>%@", error.description);
+                                         }];
+        
+        // 4. Set the progress block of the operation.
+        [operation setUploadProgressBlock:^(NSUInteger __unused bytesWritten,
+                                            long long totalBytesWritten,
+                                            long long totalBytesExpectedToWrite) {
+            DLOG(@"Wrote >>>>>>>>>>>>>>>>>%lld/%lld", totalBytesWritten, totalBytesExpectedToWrite);
+            if (totalBytesWritten < totalBytesExpectedToWrite) {
+                [SVProgressHUD showSuccessWithStatus:@"图片上传中，请稍后..."];
+            }
+        }];
+        
+        // 5. Begin!
+        [operation start];
+        DLOG(@">>>>>>>>>>>>>>>END<<<<<<<<<<<<<<<<<");
+        
+    }
+}
+
+#pragma mark - 请求数据
+-(void) postData
+{
+    if (AppDelegateInstance.userInfo == nil) {
+        [SVProgressHUD showErrorWithStatus:@"请登录!"];
+        return;
+    }
+    
+    _typeNum = 2;
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:@"157" forKey:@"OPT"];
+    [parameters setObject:@"" forKey:@"body"];
+    [parameters setObject:AppDelegateInstance.userInfo.userId forKey:@"userId"];
+//    if (_signStr) {
+//        [parameters setObject:_signStr forKey:@"sign"];
+//    }else
+       [parameters setObject:self.signId forKey:@"sign"];
+    if (_imgStr) {
+        
+        [parameters setObject:_imgStr forKey:@"items"];
+    }else
+       [parameters setObject:@"" forKey:@"items"];
+    
+    if (_requestClient == nil) {
+        _requestClient = [[NetWorkClient alloc] init];
+        _requestClient.delegate = self;
+        
+    }
+    [_requestClient requestGet:@"app/services" withParameters:parameters];
+    
+}
+
+
+#pragma mark - 请求数据
+-(void) requestData
+{
+    if (AppDelegateInstance.userInfo == nil) {
+       [SVProgressHUD showErrorWithStatus:@"请登录!"];
+        return;
+    }
+    
+    if (_literatureAudit.mark == nil || [_literatureAudit.mark isEqual:[NSNull null]]) {
+        return;
+    }
+    DLOG(@"_literatureAudit.mark -> %@", _literatureAudit.mark);
+    _typeNum = 1;
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:@"95" forKey:@"OPT"];
+    [parameters setObject:@"" forKey:@"body"];
+    [parameters setObject:AppDelegateInstance.userInfo.userId forKey:@"id"];
+    [parameters setObject:_literatureAudit.mark forKey:@"mark"];
+    
+    if (_requestClient == nil) {
+        _requestClient = [[NetWorkClient alloc] init];
+        _requestClient.delegate = self;
+        
+    }
+    [_requestClient requestGet:@"app/services" withParameters:parameters];
+    
+}
+
+#pragma HTTPClientDelegate 网络数据回调代理
+-(void) startRequest
+{
+    
+}
+
+// 返回成功
+-(void) httpResponseSuccess:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didSuccessWithObject:(id)obj
+{
+    
+    NSDictionary *dics = obj;
+    DLOG(@"===%@=======", dics);
+    DLOG(@"msg  -> %@", [obj objectForKey:@"msg"]);
+    
+    if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-1"]) {
+    
+        
+        if (_typeNum == 1) {
+            
+            _creditCycleLabel.text = [NSString stringWithFormat:@"%d 个月", [[obj objectForKey:@"auditCycle"] intValue]];
+            
+            if ([obj objectForKey:@"suggestion"]!=nil && ![[obj objectForKey:@"suggestion"] isEqual:[NSNull null]]) {
+                _suggestLabel.text = [obj objectForKey:@"suggestion"];
+            }
+            
+            NSArray *dataArr = [obj objectForKey:@"items"];
+            for (NSDictionary *dics in dataArr) {
+                ReviewCourseDetails *_reviewCourseDetails = [[ReviewCourseDetails alloc] init];
+                _reviewCourseDetails.auditItemName = [dics objectForKey:@"name"];
+                _reviewCourseDetails.status = [[dics objectForKey:@"status"] intValue];// 审核状态
+                _reviewCourseDetails.period = [[dics objectForKey:@"period"] intValue];
+                _reviewCourseDetails.creditScore = [[dics objectForKey:@"credit_score"] intValue];// 信用积分
+                _reviewCourseDetails.signId = [dics objectForKey:@"sign"];
+                if ([dics objectForKey:@"expire_time"] != nil && ![[dics objectForKey:@"expire_time"] isEqual:[NSNull null]] ) {
+                    _reviewCourseDetails.expireTime = [NSString converDate:[[dics objectForKey:@"expire_time"] objectForKey:@"time"] withFormat:@"yyyy-MM-dd"];// 到期时间
+                }
+                
+                if ([dics objectForKey:@"time"] != nil && ![[dics objectForKey:@"time"] isEqual:[NSNull null]] ) {
+                    _reviewCourseDetails.time = [NSString converDate:[[dics objectForKey:@"time"] objectForKey:@"time"] withFormat:@"yyyy-MM-dd"];
+                }
+                
+                if ([dics objectForKey:@"audit_time"] != nil && ![[dics objectForKey:@"audit_time"] isEqual:[NSNull null]] ) {
+                    _reviewCourseDetails.auditTime = [NSString converDate:[[dics objectForKey:@"audit_time"] objectForKey:@"time"] withFormat:@"yyyy-MM-dd"];//
+                }
+                
+                _reviewCourseDetails.productNames = [dics objectForKey:@"productNames"];
+                
+                [reviewArr addObject:_reviewCourseDetails];
+            }
+            
+            if(reviewArr.count != 0)
+            {
+                [self setView];
+            }
+            
+            
+        }else{
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"uploadComplete" object:self];
+        
+            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * 600000000ull)), dispatch_get_main_queue(), ^{
+                
+                [self.navigationController popViewControllerAnimated:YES];
+                
+            });
+
+         }
+    
+    } else {
+        // 服务器返回数据异常
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+    }
+    
+}
+
+// 返回失败
+-(void) httpResponseFailure:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didFailWithError:(NSError *)error
+{
+    // 服务器返回数据异常
+//    [SVProgressHUD showErrorWithStatus:@"网络异常"];
+}
+
+// 无可用的网络
+-(void) networkError
+{
+    [SVProgressHUD showErrorWithStatus:@"无可用网络"];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (_requestClient != nil) {
+        [_requestClient cancel];
+    }
+}
+
+@end

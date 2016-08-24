@@ -1,0 +1,645 @@
+//
+//  AuctionViewController.m
+//  SP2P_6.1
+//
+//  Created by Jerry on 14-7-28.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+
+#import "AuctionViewController.h"
+#import "ColorTools.h"
+#import "RechargeViewController.h"
+#import "AccuontSafeViewController.h"
+#import "SetNewDealPassWordViewController.h"
+#import "MSKeyboardScrollView.h"
+#import "MyRechargeViewController.h"
+
+#define NUMBERS @"0123456789.\n"
+@interface AuctionViewController ()<UITextFieldDelegate,HTTPClientDelegate,UIScrollViewDelegate>
+{
+
+    NSInteger _num;
+
+}
+
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong)UILabel *idLabel;
+@property(nonatomic, strong)UILabel *borrowname;
+@property(nonatomic, strong)UIImageView *leveimg;
+@property(nonatomic, strong)UILabel *rentalLabel;
+@property(nonatomic, strong)UILabel *balancelLabel;
+@property(nonatomic, strong)UILabel *capitalLabel;
+@property(nonatomic, strong)UILabel *basepriceLabel;
+@property(nonatomic, strong)UITextField *TendermoneyField;
+@property(nonatomic, strong)UITextField *passwordField;
+@property(nonatomic, strong)UILabel *passwordLabel;
+@property(nonatomic, strong)MSKeyboardScrollView *scrollView;
+@property(nonatomic, strong)UIButton *setBtn;
+@property(nonatomic, strong)UIView *backView2;
+@property(nonatomic ,strong) NetWorkClient *requestClient;
+@property(nonatomic ,strong)UIButton *auctionBtn;
+
+@end
+
+@implementation AuctionViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // 初始化数据
+    [self initData];
+    
+    // 初始化视图
+    [self initView];
+    
+}
+
+/**
+ * 初始化数据
+ */
+- (void)initData
+{
+    
+    _num = 1;
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    //竞拍相关信息
+    [parameters setObject:@"33" forKey:@"OPT"];
+    [parameters setObject:@"" forKey:@"body"];
+    [parameters setObject:[NSString stringWithFormat:@"%@",_creditorId] forKey:@"creditorId"];
+    [parameters setObject:[NSString stringWithFormat:@"%@",AppDelegateInstance.userInfo.userId] forKey:@"id"];
+    
+    
+    if (_requestClient == nil) {
+        _requestClient = [[NetWorkClient alloc] init];
+        _requestClient.delegate = self;
+    }
+     [_requestClient requestGet:@"app/services" withParameters:parameters];
+    
+}
+
+/**
+ 初始化数据
+ */
+- (void)initView
+{
+    
+    [self initNavigationBar];
+    self.view.backgroundColor = KblackgroundColor;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    //滚动视图
+    _scrollView =[[MSKeyboardScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height)];
+    _scrollView.userInteractionEnabled = YES;
+    _scrollView.scrollEnabled = YES;
+    _scrollView.showsHorizontalScrollIndicator =NO;
+    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.delegate = self;
+    _scrollView.backgroundColor = KblackgroundColor;
+    _scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 620);
+    [self.view addSubview:_scrollView];
+   
+    
+    UIView *backView1  = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 68)];
+    backView1.backgroundColor = [UIColor whiteColor];
+    [_scrollView addSubview:backView1];
+    
+  /*  UIControl *viewControl1 = [[UIControl alloc] initWithFrame:self.view.bounds];
+    [viewControl1 addTarget:self action:@selector(ControlAction) forControlEvents:UIControlEventTouchUpInside];
+    [_scrollView addSubview:viewControl1];*/
+    
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 4, 220, 35)];
+    _titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+    _titleLabel.adjustsFontSizeToFitWidth = YES;
+    _titleLabel.textAlignment = NSTextAlignmentLeft;
+    [backView1 addSubview:_titleLabel];
+    
+    UILabel *idtextLabel = [[UILabel alloc] initWithFrame:CGRectMake(MSWIDTH-95, 8, 80, 30)];
+    idtextLabel.text = @"编号:";
+    idtextLabel.textColor = [UIColor lightGrayColor];
+    idtextLabel.font = [UIFont systemFontOfSize:12.0f];
+    idtextLabel.textAlignment = NSTextAlignmentLeft;
+    [backView1 addSubview:idtextLabel];
+    
+    _idLabel = [[UILabel alloc] initWithFrame:CGRectMake(MSWIDTH-65, 8, 100, 30)];
+    _idLabel.textColor = [UIColor lightGrayColor];
+    _idLabel.font = [UIFont systemFontOfSize:12.0f];
+    _idLabel.textAlignment = NSTextAlignmentLeft;
+    _idLabel.text = _debtNo;
+    [backView1 addSubview:_idLabel];
+    
+    
+    UILabel *borrowLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 31, 80, 30)];
+    borrowLabel.text = @"借款人:";
+    borrowLabel.textColor = [UIColor blackColor];
+    borrowLabel.font = [UIFont systemFontOfSize:14.0f];
+    borrowLabel.textAlignment = NSTextAlignmentLeft;
+    [backView1 addSubview:borrowLabel];
+    
+    _borrowname = [[UILabel alloc] initWithFrame:CGRectMake(60, 31, 80, 30)];
+    _borrowname.textColor = [UIColor grayColor];
+    _borrowname.font = [UIFont systemFontOfSize:14.0f];
+    _borrowname.textAlignment = NSTextAlignmentLeft;
+    [backView1 addSubview:_borrowname];
+    
+    _leveimg = [[UIImageView alloc] initWithFrame:CGRectMake(140, 26, 20, 20)];
+    [backView1 addSubview:_leveimg];
+    
+    
+    
+    _backView2  = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(backView1.frame)+5, self.view.frame.size.width, MSHEIGHT-68)];
+    _backView2.backgroundColor = [UIColor whiteColor];
+    [_scrollView addSubview:_backView2];
+    
+    UIControl *viewControl2 = [[UIControl alloc] initWithFrame:_backView2.bounds];
+    [viewControl2 addTarget:self action:@selector(ControlAction) forControlEvents:UIControlEventTouchUpInside];
+    [_backView2 addSubview:viewControl2];
+    
+    UILabel *rentalTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 30)];
+    rentalTextLabel.text = @"您的账户总额:";
+    rentalTextLabel.textColor = [UIColor grayColor];
+    rentalTextLabel.font = [UIFont systemFontOfSize:14.0f];
+    rentalTextLabel.textAlignment = NSTextAlignmentLeft;
+    [_backView2 addSubview:rentalTextLabel];
+    
+    _rentalLabel = [[UILabel alloc] initWithFrame:CGRectMake(100,20, 150, 30)];
+    _rentalLabel.textColor = PinkColor;
+    _rentalLabel.font = [UIFont systemFontOfSize:14.0f];
+    _rentalLabel.textAlignment = NSTextAlignmentLeft;
+    [_backView2 addSubview:_rentalLabel];
+    
+    
+    
+    UILabel *balanceTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 45, 100, 30)];
+    balanceTextLabel.text = @"您的可用余额:";
+    balanceTextLabel.textColor = [UIColor grayColor];
+    balanceTextLabel.font = [UIFont systemFontOfSize:14.0f];
+    balanceTextLabel.textAlignment = NSTextAlignmentLeft;
+    [_backView2 addSubview:balanceTextLabel];
+    
+    _balancelLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 45, 150, 30)];
+    _balancelLabel.textColor = PinkColor;
+    _balancelLabel.font = [UIFont systemFontOfSize:14.0f];
+    _balancelLabel.textAlignment = NSTextAlignmentLeft;
+    [_backView2 addSubview:_balancelLabel];
+    
+    
+    UIButton *RechargeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    RechargeBtn.frame = CGRectMake(_backView2.frame.size.width-80, 70,60, 25);
+    RechargeBtn.backgroundColor = PinkColor;
+    [RechargeBtn setTitle:@"充值" forState:UIControlStateNormal];
+    [RechargeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    RechargeBtn.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:14.0];
+    [RechargeBtn.layer setMasksToBounds:YES];
+    [RechargeBtn.layer setCornerRadius:3.0];
+    [RechargeBtn addTarget:self action:@selector(RechargeBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_backView2 addSubview:RechargeBtn];
+    
+    
+    
+    UILabel *capitalTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 70, 85, 30)];
+    capitalTextLabel.text = @"待收本金:";
+    capitalTextLabel.textColor = [UIColor grayColor];
+    capitalTextLabel.font = [UIFont systemFontOfSize:14.0f];
+    capitalTextLabel.textAlignment = NSTextAlignmentRight;
+    [_backView2 addSubview:capitalTextLabel];
+    
+    _capitalLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 70, 100, 30)];
+    _capitalLabel.textColor = [UIColor lightGrayColor];
+    _capitalLabel.font = [UIFont systemFontOfSize:14.0f];
+    _capitalLabel.textAlignment = NSTextAlignmentLeft;
+    [_backView2 addSubview:_capitalLabel];
+    
+    
+    UILabel *basepriceTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 95, 87, 30)];
+    basepriceTextLabel.text = @"竞拍底价:";
+    basepriceTextLabel.textColor = [UIColor grayColor];
+    basepriceTextLabel.font = [UIFont systemFontOfSize:14.0f];
+    basepriceTextLabel.textAlignment = NSTextAlignmentRight;
+    [_backView2 addSubview:basepriceTextLabel];
+    
+    _basepriceLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 95,100, 30)];
+    _basepriceLabel.textColor = [UIColor lightGrayColor];
+    _basepriceLabel.font = [UIFont systemFontOfSize:14.0f];
+    _basepriceLabel.textAlignment = NSTextAlignmentLeft;
+    [_backView2 addSubview:_basepriceLabel];
+    
+    
+    
+    
+    UILabel *TendermoneyLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 140, 100, 40)];
+    TendermoneyLabel.text = @"我的出价";
+    TendermoneyLabel.textColor = [UIColor grayColor];
+    TendermoneyLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+    TendermoneyLabel.textAlignment = NSTextAlignmentLeft;
+    [_backView2 addSubview:TendermoneyLabel];
+
+    
+    UILabel *passwordLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 180, 100, 40)];
+    passwordLabel.text = @"交易密码";
+    passwordLabel.textColor = [UIColor grayColor];
+    passwordLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+    passwordLabel.textAlignment = NSTextAlignmentLeft;
+    passwordLabel.tag = 1008;
+    [_backView2 addSubview:passwordLabel];
+    
+    
+    _TendermoneyField = [[UITextField alloc] initWithFrame:CGRectMake(110,145, MSWIDTH-195,30)];
+    _TendermoneyField.font = [UIFont systemFontOfSize:13.0f];
+    _TendermoneyField.delegate = self;
+    _TendermoneyField.tag = 101;
+    _TendermoneyField.placeholder = @"请输入投标金额";
+    _TendermoneyField.borderStyle = UITextBorderStyleRoundedRect;
+    _TendermoneyField.keyboardType = UIKeyboardTypeDecimalPad;
+    [_backView2 addSubview:_TendermoneyField];
+    
+    
+    UILabel *TextLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_TendermoneyField.frame)+5, 140, 100, 40)];
+    TextLabel.text = @"元";
+    TextLabel.textColor = [UIColor grayColor];
+    TextLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+    TextLabel.textAlignment = NSTextAlignmentLeft;
+    [_backView2 addSubview:TextLabel];
+    
+    
+    _passwordField = [[UITextField alloc] initWithFrame:CGRectMake(110, 185, MSWIDTH-195,30)];
+    _passwordField.font = [UIFont systemFontOfSize:13.0f];
+    _passwordField.delegate = self;
+    _passwordField.placeholder = @"请输入交易密码";
+    _passwordField.tag = 102;
+    _passwordField.secureTextEntry = YES;
+    _passwordField.borderStyle = UITextBorderStyleRoundedRect;
+    [_backView2 addSubview:_passwordField];
+    
+    
+    _setBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _setBtn.frame = CGRectMake(240, 190,70, 25);
+    _setBtn.backgroundColor = PinkColor;
+    [_setBtn setTitle:@"设置交易密码" forState:UIControlStateNormal];
+    [_setBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    _setBtn.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:11.0];
+    [_setBtn.layer setMasksToBounds:YES];
+    [_setBtn.layer setCornerRadius:3.0];
+    [_setBtn addTarget:self action:@selector(setBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+
+    _auctionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _auctionBtn.frame = CGRectMake(_backView2.frame.size.width*0.5-50, CGRectGetMaxY(_passwordField.frame)+25,110, 27);
+    _auctionBtn.backgroundColor = GreenColor;
+    [_auctionBtn setTitle:@"立即竞拍" forState:UIControlStateNormal];
+    [_auctionBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    _auctionBtn.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:14.0];
+    [_auctionBtn.layer setMasksToBounds:YES];
+    [_auctionBtn.layer setCornerRadius:3.0];
+    [_auctionBtn addTarget:self action:@selector(tenderBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_backView2  addSubview:_auctionBtn];
+    
+    
+    
+    
+}
+
+
+//开始编辑输入框的时候，软键盘出现，执行此事件
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    CGRect frame = textField.frame;
+    int offset = frame.origin.y + 32 - (self.view.frame.size.height - 216.0);//键盘高度216
+    
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    
+    //将视图的Y坐标向上移动offset个单位，以使下面腾出地方用于软键盘的显示
+    if(offset > 0)
+        self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
+    
+    [UIView commitAnimations];
+}
+
+
+/**
+ * 初始化导航条
+ */
+- (void)initNavigationBar
+{
+    self.title = @"竞拍";
+    [self.navigationController.navigationBar setBarTintColor:KColor];
+    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                      [UIColor whiteColor], NSForegroundColorAttributeName,
+                                                                      [UIFont fontWithName:@"Arial-BoldMT" size:18.0], NSFontAttributeName, nil]];
+    
+    
+    
+    // 导航条返回按钮
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc]  initWithImage:[UIImage imageNamed:@"nav_back"] style:UIBarButtonItemStyleDone target:self action:@selector(backClick)];
+    backItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setLeftBarButtonItem:backItem];
+    
+    // 导航条分享按钮
+    UIBarButtonItem *ShareItem=[[UIBarButtonItem alloc]  initWithImage:[UIImage imageNamed:@"nav_share"] style:UIBarButtonItemStyleDone target:self action:@selector(ShareClick)];
+    ShareItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setRightBarButtonItem:ShareItem];
+}
+
+
+
+#pragma HTTPClientDelegate 网络数据回调代理
+-(void) startRequest
+{
+    
+}
+
+// 返回成功
+-(void) httpResponseSuccess:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didSuccessWithObject:(id)obj
+{
+   
+    
+    DLOG(@"==竞拍返回成功=======%@",obj);
+    NSDictionary *dics = obj;
+    
+    if(_num == 1)
+    {
+    
+        if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-1"]) {
+        
+            _titleLabel.text = [dics objectForKey:@"title"];
+            _borrowname.text = [dics objectForKey:@"Name"];
+            
+            if ([dics objectForKey:@"creditRating"] != nil && ![[dics objectForKey:@"creditRating"]isEqual:[NSNull null]])
+            {
+                if ([[dics objectForKey:@"creditRating"] hasPrefix:@"http"]) {
+                    [_leveimg sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[dics objectForKey:@"creditRating"]]]];
+                }
+                else
+                {
+                    
+                    [_leveimg sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",Baseurl,[dics objectForKey:@"creditRating"]]]];
+                }
+            }
+            _rentalLabel.text = [NSString stringWithFormat:@"¥%0.1f",[[dics objectForKey:@"accountAmount"] floatValue]];
+            _balancelLabel.text = [NSString stringWithFormat:@"¥%0.1f",[[dics objectForKey:@"availableBalance"] floatValue]];
+            _capitalLabel.text = [NSString stringWithFormat:@"¥%0.1f",[[dics objectForKey:@"principal"] floatValue]];
+            _basepriceLabel.text = [NSString stringWithFormat:@"¥%0.1f",[[dics objectForKey:@"auctionBasePrice"] floatValue]];
+            
+               NSString *dealpwd = [NSString stringWithFormat:@"%@",[dics objectForKey:@"isDealPassword"]];
+            if([dealpwd isEqualToString:@"0"]){
+                
+                [_passwordField removeFromSuperview];
+                [_setBtn removeFromSuperview];
+                UILabel *pwdLabel = (UILabel*)[_backView2 viewWithTag:1008];
+                [pwdLabel removeFromSuperview];
+            }
+            
+            NSString *paypwd = [NSString stringWithFormat:@"%@",[dics objectForKey:@"payPassword"]];
+            
+            if([paypwd isEqualToString:@"0"]){
+            
+                _passwordField.placeholder = @"请先设置交易密码";
+                _passwordField.userInteractionEnabled = NO;
+                 [_backView2 addSubview:_setBtn];
+            
+            }
+            
+          
+            
+        }else {
+            
+            DLOG(@"返回失败===========%@",[obj objectForKey:@"msg"]);
+           [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+            
+        }
+    }
+    
+    if (_num == 2)
+    {
+            
+            
+         if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-1"]) {
+             
+             DLOG(@"返回成功===========%@",[obj objectForKey:@"msg"]);
+
+             
+             [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+             
+             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * 600000000ull)), dispatch_get_main_queue(), ^{
+                 
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"AuctionRefresh" object:self];
+                 [self.navigationController popToRootViewControllerAnimated:NO];
+             });
+             
+             
+             }
+            
+         else{
+             _auctionBtn.enabled = YES;
+             DLOG(@"返回失败===========%@",[obj objectForKey:@"msg"]);
+             [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+             
+         }
+    }
+}
+
+// 返回失败
+-(void) httpResponseFailure:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didFailWithError:(NSError *)error
+{
+    // 服务器返回数据异常
+//    [SVProgressHUD showErrorWithStatus:@"网络异常"];
+    _auctionBtn.enabled = YES;
+}
+
+// 无可用的网络
+-(void) networkError
+{
+    [SVProgressHUD showErrorWithStatus:@"无可用网络"];
+    _auctionBtn.enabled = YES;
+}
+
+
+#pragma mark 点击空白处收回键盘
+- (void)ControlAction
+{
+    
+    for (UITextField *textField in [_backView2 subviews])
+    {
+        if ([textField isKindOfClass: [UITextField class]]) {
+            
+            [textField  resignFirstResponder];
+        }
+    }
+}
+
+#pragma 输入框代理
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    
+    return YES;
+}
+
+#pragma 限制只能输入数字和.
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    BOOL canChange;
+    if (textField.tag == 101) {
+        NSCharacterSet *cs;
+        cs = [[NSCharacterSet characterSetWithCharactersInString:NUMBERS]invertedSet];
+        
+        NSString *filtered = [[string componentsSeparatedByCharactersInSet:cs]componentsJoinedByString:@""];
+        
+        canChange = [string isEqualToString:filtered];
+    }
+    else
+    {
+        canChange = YES;
+        
+    }
+    
+    return canChange;
+}
+
+
+#pragma 返回按钮触发方法
+- (void)backClick
+{
+    if (_requestClient != nil) {
+        [_requestClient cancel];
+    }
+    // DLOG(@"返回按钮");
+    [self.navigationController popViewControllerAnimated:NO];
+    
+    
+}
+
+#pragma mark 竞拍按钮
+- (void)tenderBtnClick
+{
+    _auctionBtn.enabled = NO;
+    
+    DLOG(@"竞拍按钮！！");
+
+    _num = 2;
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    //竞拍相关信息
+    [parameters setObject:@"34" forKey:@"OPT"];
+    [parameters setObject:@"" forKey:@"body"];
+    [parameters setObject:[NSString stringWithFormat:@"%@",_creditorId] forKey:@"creditorId"];
+    [parameters setObject:[NSString stringWithFormat:@"%@",AppDelegateInstance.userInfo.userId] forKey:@"id"];
+    [parameters setObject:_TendermoneyField.text forKey:@"amount"];
+    if(_passwordField.text){
+       
+        NSString *dealpwd = [NSString encrypt3DES:_passwordField.text key:DESkey];
+        [parameters setObject:dealpwd forKey:@"dealPwd"];
+        
+    }else
+    [parameters setObject:@"" forKey:@"dealPwd"];
+    
+    if (_requestClient == nil) {
+        _requestClient = [[NetWorkClient alloc] init];
+        _requestClient.delegate = self;
+       
+    }
+     [_requestClient requestGet:@"app/services" withParameters:parameters];
+  
+}
+
+
+#pragma mark 设置交易密码按钮
+- (void)setBtnClick
+{
+    
+    if (!AppDelegateInstance.userInfo.isTeleStatus || !AppDelegateInstance.userInfo.isSecretStatus || !AppDelegateInstance.userInfo.isSecretStatus) {
+        
+           [SVProgressHUD showErrorWithStatus:@"请先设置相关安全问题!"];
+        AccuontSafeViewController *AccuontSafeView = [[AccuontSafeViewController alloc] init];
+        UINavigationController *NaVController20 = [[UINavigationController alloc] initWithRootViewController:AccuontSafeView];
+        [self presentViewController:NaVController20 animated:YES completion:nil];
+        
+    
+    }else{
+        
+       SetNewDealPassWordViewController *dealView = [[SetNewDealPassWordViewController alloc] init];
+       dealView.ispayPasswordStatus = NO;
+       dealView.statuStr = @"竞拍设置";
+       UINavigationController *dealNav = [[UINavigationController alloc] initWithRootViewController:dealView];
+       [self.navigationController presentViewController:dealNav animated:NO completion:nil];
+    
+    }
+}
+
+#pragma mark 充值按钮
+- (void)RechargeBtnClick
+{
+    
+    DLOG(@"充值按钮！！");
+    MyRechargeViewController *RechargeView = [[MyRechargeViewController alloc] init];
+    UINavigationController *RechargeNav = [[UINavigationController alloc] initWithRootViewController:RechargeView];
+    [self.navigationController presentViewController:RechargeNav animated:NO completion:nil];
+}
+
+
+
+
+#pragma 分享按钮
+- (void)ShareClick
+{
+    DLOG(@"分享按钮");
+    
+    if (AppDelegateInstance.userInfo == nil) {
+        
+        [SVProgressHUD showErrorWithStatus:@"请登录!"];
+        
+    }else {
+        DLOG(@"分享按钮");
+        
+//        NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"logo" ofType:@"png"];
+        
+        NSString *shareUrl = [NSString stringWithFormat:@"%@/front/invest/invest?bidId=1111", Baseurl];
+        
+        //构造分享内容
+        id<ISSContent> publishContent = [ShareSDK content:[NSString stringWithFormat:@"sp2p 6.0华夏企贷网 我要投资 借款详情%@",shareUrl]
+                                           defaultContent:@"默认分享内容，没内容时显示"
+                                                    image:[ShareSDK pngImageWithImage:[UIImage imageNamed:@"logo"]]
+                                                    title:@"借款详情"
+                                                      url:shareUrl
+                                              description:@"这是一条测试信息"
+                                                mediaType:SSPublishContentMediaTypeNews];
+        
+        [ShareSDK showShareActionSheet:nil
+                             shareList:nil
+                               content:publishContent
+                         statusBarTips:YES
+                           authOptions:nil
+                          shareOptions: nil
+                                result:^(ShareType type, SSResponseState state, id<ISSPlatformShareInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
+                                    if (state == SSResponseStateSuccess)
+                                    {
+                                        DLOG(@"分享成功");
+                                    }
+                                    else if (state == SSResponseStateFail)
+                                    {
+                                        DLOG(@"分享失败,错误码:%ld,错误描述:%@", (long)[error errorCode], [error errorDescription]);
+                                        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [error errorDescription]]];
+                                    }
+                                }];
+    }
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (_requestClient != nil) {
+        [_requestClient cancel];
+    }
+}
+
+@end

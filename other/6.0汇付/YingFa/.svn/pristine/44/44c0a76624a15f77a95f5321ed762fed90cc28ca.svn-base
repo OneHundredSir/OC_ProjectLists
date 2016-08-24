@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D1AD598C-6655-4C22-911D-FAB835B02BC1</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SP2P_6.1</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>20e5cffd-2dbc-0546-b076-304169ced6dd++5395</key>
+		<string>http://svn.products.shovesoft.com:443/svn/SP2P/app/IOS/sp2p6.0/SP2P_6.1</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SP2P_6.1.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>20e5cffd-2dbc-0546-b076-304169ced6dd++5395</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>20e5cffd-2dbc-0546-b076-304169ced6dd++5395</key>
+		<string>http://svn.products.shovesoft.com:443/svn/SP2P</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://svn.products.shovesoft.com:443/svn/SP2P/app/IOS/sp2p6.0/SP2P_6.1/SP2P_6.1.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>20e5cffd-2dbc-0546-b076-304169ced6dd++5395</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>20e5cffd-2dbc-0546-b076-304169ced6dd++5395</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SP2P_6.1</string>
+		</dict>
+	</array>
+</dict>
+</plist>

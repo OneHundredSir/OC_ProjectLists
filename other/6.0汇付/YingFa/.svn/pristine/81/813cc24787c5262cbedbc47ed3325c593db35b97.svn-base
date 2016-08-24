@@ -1,0 +1,390 @@
+//
+//  OtherLoginViewController.m
+//  SP2P_6.1
+//
+//  Created by Jerry on 14/10/18.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+
+#import "OtherLoginViewController.h"
+
+#import "ColorTools.h"
+#import "RegistrationViewController.h"
+#import "RetrievePasswordViewController.h"
+
+#import "LoginWindowTextField.h"
+#import "UserInfo.h"
+
+#import "QCheckBox.h"
+
+#import "OtherFristLockViewController.h"
+#import "NSString+encryptDES.h"
+
+
+#define kWidthWin self.view.frame.size.width - 40
+
+@interface OtherLoginViewController ()<HTTPClientDelegate, QCheckBoxDelegate>
+{
+    BOOL _isLoading;
+}
+
+@property (nonatomic, strong) UITextField *loginView;
+// 只用于 密码 输入框的又控件
+@property (nonatomic, strong) UISwitch *rightSwitch;
+// 密码框
+@property (nonatomic, strong) LoginWindowTextField *passWindow;
+// 用户名框
+@property (nonatomic, strong) LoginWindowTextField *nameWindow;
+
+@property (nonatomic,strong) QCheckBox *check;
+
+@property(nonatomic ,strong) NetWorkClient *requestClient;
+
+@end
+
+@implementation OtherLoginViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    // 初始化数据
+    [self initData];
+    
+    // 初始化视图
+    [self initView];
+}
+
+/**
+ 初始化数据
+ */
+- (void)initData
+{
+    
+}
+
+/**
+ 初始化数据
+ */
+- (void)initView
+{
+    [self initNavigationBar];
+    
+    [self initContentView];
+}
+
+/**
+ * 初始化导航条
+ */
+- (void)initNavigationBar
+{
+    self.title = @"登录";
+    [self.view setBackgroundColor:KblackgroundColor];
+    
+    [self.navigationController.navigationBar setBarTintColor:KColor];
+    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                      [UIColor whiteColor], NSForegroundColorAttributeName,
+                                                                      [UIFont fontWithName:@"Arial-BoldMT" size:18.0], NSFontAttributeName, nil]];
+    
+    // 导航条 左边 返回按钮
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_back"] style:UIBarButtonItemStyleDone target:self action:@selector(butClick:)];
+    backItem.tag = 1;
+    backItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setLeftBarButtonItem:backItem];
+    
+    
+    
+    // 导航条 右边 设置按钮
+    UIBarButtonItem *settingItem=[[UIBarButtonItem alloc] initWithTitle:@"注册" style:UIBarButtonItemStyleDone target:self action:@selector(butClick:)];
+    settingItem.tag = 2;
+    settingItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setRightBarButtonItem:settingItem];
+    
+}
+
+/**
+ * 初始化内容详情
+ */
+- (void)initContentView
+{
+    UIControl *viewControl = [[UIControl alloc] initWithFrame:self.view.bounds];
+    [viewControl addTarget:self action:@selector(ControlAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:viewControl];
+    
+    // 用户名的边框
+    UIButton *signBtn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    signBtn1.frame = CGRectMake(20, 80, kWidthWin, 38);
+    signBtn1.backgroundColor = [UIColor whiteColor];
+    [signBtn1.layer setMasksToBounds:YES];
+    [signBtn1.layer setCornerRadius:4.0]; //设置矩形四个圆角半径
+    [signBtn1.layer setBorderWidth:1.0];   //边框宽度
+    [signBtn1.layer setBorderColor:KlayerBorder.CGColor];//边框颜色
+    [self.view addSubview:signBtn1];
+    
+    // 用户名 输入框
+    _nameWindow = [[LoginWindowTextField alloc] initWithFrame:CGRectMake(20, CGRectGetMinY(signBtn1.frame), kWidthWin, 38)];
+    [_nameWindow textWithleftImage:@"login_icon" rightImage:@"login_arrow_down" placeName:@"邮箱账号/用户名"];
+    
+    // 密码的边框
+    UIButton *signBtn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    signBtn2.frame = CGRectMake(20, CGRectGetMaxY(_nameWindow.frame) + 16, kWidthWin, 38);
+    signBtn2.backgroundColor = [UIColor whiteColor];
+    [signBtn2.layer setMasksToBounds:YES];
+    [signBtn2.layer setCornerRadius:4.0]; //设置矩形四个圆角半径
+    [signBtn2.layer setBorderWidth:1.0];   //边框宽度
+    [signBtn2.layer setBorderColor:KlayerBorder.CGColor];//边框颜色
+    [self.view addSubview:signBtn2];
+    
+    // 密码 输入框
+    _passWindow = [[LoginWindowTextField alloc] initWithFrame:CGRectMake(20, CGRectGetMaxY(_nameWindow.frame) + 16, kWidthWin, 38)];
+    _passWindow.secureTextEntry = YES;
+    [_passWindow textWithleftImage:@"login_lock" rightImage:nil placeName:@"密码"];
+    
+    [self.view addSubview:_nameWindow];
+    [self.view addSubview:_passWindow];
+    
+    _rightSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(kWidthWin - 40, CGRectGetMidY(_passWindow.frame) - 16, 30, 32)];
+    [_rightSwitch setOn:YES];
+    [_rightSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:_rightSwitch];
+    
+    UIButton *getBackbutton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_passWindow.frame) - 70, CGRectGetMaxY(_passWindow.frame) + 12, 70, 30)];
+    [getBackbutton setTitle:@"找回密码？" forState:UIControlStateNormal];
+    [getBackbutton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    getBackbutton.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:14.0];
+    [getBackbutton addTarget:self action:@selector(getBackPassword) forControlEvents:UIControlEventTouchUpInside];
+    
+    _check = [[QCheckBox alloc] initWithDelegate:self];
+    [_check setImage:[UIImage imageNamed:@"checkbox3_unchecked"] forState:UIControlStateNormal];
+    [_check setImage:[UIImage imageNamed:@"checkbox3_checked"] forState:UIControlStateSelected];
+    _check.frame = CGRectMake(20, CGRectGetMaxY(_passWindow.frame) + 12, 150, 30);
+    [_check setTitle:@"记住密码" forState:UIControlStateNormal];
+    [_check setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    _check.checked = [[AppDefaultUtil sharedInstance] isRemeberUser];
+    [_check.titleLabel setFont:[UIFont boldSystemFontOfSize:15.0f]];
+    [self.view addSubview:_check];
+    
+    UIButton *signBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    signBtn.frame = CGRectMake(20, CGRectGetMaxY(_check.frame) + 16, kWidthWin, 38);
+    signBtn.backgroundColor = GreenColor;
+    [signBtn setTitle:@"登 录" forState:UIControlStateNormal];
+    [signBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    signBtn.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:16.0];
+    [signBtn.layer setMasksToBounds:YES];
+    [signBtn.layer setCornerRadius:4.0]; //设置矩形四个圆角半径
+    [signBtn addTarget:self action:@selector(signClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:signBtn];
+    
+    [self.view addSubview:getBackbutton];
+}
+
+/**
+ * 导航条两侧按钮点击事件
+ * 根据Button的tag值区分
+ */
+- (void)butClick:(UIButton *)but
+{
+    switch (but.tag) {
+        case 1:
+            [self dismissViewControllerAnimated:YES completion:^(){}];
+            break;
+        case 2:
+        {
+            RegistrationViewController *regView = [[RegistrationViewController alloc] init];
+            
+            [self.navigationController pushViewController:regView animated:YES];
+        }
+            break;
+    }
+}
+
+#pragma 单选框选中触发方法
+- (void)didSelectedCheckBox:(QCheckBox *)checkbox checked:(BOOL)checked {
+    DLOG(@"did tap on CheckBox:%@ checked:%d", checkbox.titleLabel.text, checked);
+    [[AppDefaultUtil sharedInstance]  setRemeberUser:checked];
+}
+
+#pragma ===============
+
+/**
+ * 密码输入框右边的开关按钮
+ * 切换密码是否明文
+ */
+- (void)switchAction:(UISwitch *)sender
+{
+    UISwitch *switchButton = sender;
+    
+    BOOL isButtonOn = [switchButton isOn];
+    if (isButtonOn) {
+        _passWindow.secureTextEntry = YES;
+    }else {
+        _passWindow.secureTextEntry = NO;
+    }
+}
+
+#pragma mark 点击登录按钮
+- (void)signClick
+{
+    [self ControlAction];// 关闭键盘
+    
+    if ([_nameWindow.text isEqualToString:@""]) {
+        return;
+    }
+    if ([_passWindow.text isEqualToString:@""]) {
+        return;
+    }
+    
+    if (!_isLoading) {
+        // 不在加载
+        // 账号：1  密码：1
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        NSString *name = _nameWindow.text;
+        NSString *password = [NSString encrypt3DES:_passWindow.text key:DESkey];
+        [parameters setObject:@"1" forKey:@"OPT"];
+        [parameters setObject:@"" forKey:@"body"];
+        [parameters setObject:name forKey:@"name"];
+        [parameters setObject:password forKey:@"pwd"];
+        
+        if(AppDelegateInstance.userId !=nil && AppDelegateInstance.channelId != nil)
+        {
+            [parameters setObject:AppDelegateInstance.userId forKey:@"userId"];
+            [parameters setObject:AppDelegateInstance.channelId forKey:@"channelId"];
+            
+        }else{
+            
+            
+            [parameters setObject:@"" forKey:@"userId"];
+            [parameters setObject:@"" forKey:@"channelId"];
+            
+        }
+        [parameters setObject:@"2" forKey:@"deviceType"];
+        
+        if (_requestClient == nil) {
+            _requestClient = [[NetWorkClient alloc] init];
+            _requestClient.delegate = self;
+        }
+        [_requestClient requestGet:@"app/services" withParameters:parameters];
+    }
+}
+
+#pragma mark 点击 找回密码 按钮
+- (void)getBackPassword
+{
+    RetrievePasswordViewController *retrievePassword = [[RetrievePasswordViewController alloc] init];
+    
+    [self.navigationController pushViewController:retrievePassword animated:YES];
+}
+
+#pragma mark 点击空白处收回键盘
+- (void)ControlAction
+{
+    for (UITextField *textField in [self.view subviews]) {
+        
+        if ([textField isKindOfClass: [UITextField class]]) {
+            
+            [textField  resignFirstResponder];
+        }
+    }
+}
+
+#pragma HTTPClientDelegate 网络数据回调代理
+-(void) startRequest
+{
+    _isLoading = YES;
+//    [SVProgressHUD showProgress:0.1 status:[NSString stringWithFormat:@"Loading"]];
+}
+
+// 返回成功
+-(void) httpResponseSuccess:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didSuccessWithObject:(id)obj
+{
+    NSDictionary *dics = obj;
+    
+    if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-1"]) {
+        
+        DLOG(@"返回成功  username -> %@",[obj objectForKey:@"username"]);
+        DLOG(@"返回成功  id -> %@",[obj objectForKey:@"id"]);
+        DLOG(@"返回成功  vipStatus -> %@",[obj objectForKey:@"vipStatus"]);
+        
+        UserInfo *usermodel = [[UserInfo alloc] init];
+        usermodel.userName = [obj objectForKey:@"username"];
+        
+        if ([[NSString stringWithFormat:@"%@",[obj objectForKey:@"headImg"]] hasPrefix:@"http"]) {
+            
+            usermodel.userImg = [NSString stringWithFormat:@"%@", [obj objectForKey:@"headImg"]];
+        }else{
+            
+            usermodel.userImg = [NSString stringWithFormat:@"%@%@", Baseurl, [obj objectForKey:@"headImg"]];
+            
+        }
+        
+        if([[NSString stringWithFormat:@"%@",[obj objectForKey:@"creditRating"]] hasPrefix:@"http"])
+        {
+            usermodel.userCreditRating = [obj objectForKey:@"creditRating"];
+            
+        }else{
+            usermodel.userCreditRating =  [NSString stringWithFormat:@"%@%@", Baseurl, [obj objectForKey:@"creditRating"]];
+        }
+        
+        usermodel.userLimit = [obj objectForKey:@"creditLimit"];
+        usermodel.isVipStatus = [obj objectForKey:@"vipStatus"];
+        usermodel.userId = [obj objectForKey:@"id"];
+        usermodel.isLogin = @"1";
+        usermodel.accountAmount = [NSString stringWithFormat:@"%.2f", [[obj objectForKey:@"accountAmount"] doubleValue]];
+        usermodel.availableBalance = [NSString stringWithFormat:@"%.2f", [[obj objectForKey:@"availableBalance"] doubleValue]];
+        
+        AppDelegateInstance.userInfo = usermodel;
+        
+        // 通知全局广播 LeftMenuController 修改UI操作
+        [[NSNotificationCenter defaultCenter]  postNotificationName:@"update" object:[obj objectForKey:@"username"]];
+        
+        [self loginSuccess];// 登录成功
+        
+    }else {
+        DLOG(@"返回失败  msg -> %@",[obj objectForKey:@"msg"]);
+        
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+    }
+    _isLoading  = NO;
+}
+
+// 返回失败
+-(void) httpResponseFailure:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didFailWithError:(NSError *)error
+{
+    // 服务器返回数据异常
+//    [SVProgressHUD showErrorWithStatus:@"网络异常"];
+    _isLoading  = NO;
+}
+
+// 无可用的网络
+-(void) networkError
+{
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"无可用网络"]];
+    _isLoading  = NO;
+}
+
+#pragma 登陆成功、是否记住密码
+-(void) loginSuccess
+{
+    [[AppDefaultUtil sharedInstance] setDefaultUserName:AppDelegateInstance.userInfo.userName];// 保存用户昵称
+    [[AppDefaultUtil sharedInstance] setDefaultAccount:_nameWindow.text];// 保存用户账号
+    NSString *pwdStr = [NSString encrypt3DES:_passWindow.text key:DESkey];//用户密码3Des加密
+    [[AppDefaultUtil sharedInstance] setDefaultUserPassword:pwdStr];// 保存用户密码
+    [[AppDefaultUtil sharedInstance] setDefaultHeaderImageUrl:AppDelegateInstance.userInfo.userImg];// 保存用户头像
+    
+    OtherFristLockViewController *controller = [[OtherFristLockViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+    
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (_requestClient != nil) {
+        [_requestClient cancel];
+    }
+}
+
+@end
+

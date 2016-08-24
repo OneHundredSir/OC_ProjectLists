@@ -1,0 +1,448 @@
+//
+//  RegistrationViewController.m
+//  SP2P_6.1
+//
+//  Created by kiu on 14-6-17.
+//  Copyright (c) 2014年 EIMS. All rights reserved.
+//
+//  注册
+
+#import "RegistrationViewController.h"
+
+#import "ColorTools.h"
+#import "LoginWindowTextField.h"
+#import "MemberProtocolViewController.h"
+#import "NSString+Shove.h"
+
+#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonCryptor.h>
+#import <Security/Security.h>
+#import "NSString+encryptDES.h"
+#import "LoginViewController.h"
+#import "FristGestureLockViewController.h"
+
+#define kWidthWin self.view.frame.size.width - 40
+
+#define kChosenDigestLength CC_SHA1_DIGEST_LENGTH
+
+
+@interface RegistrationViewController ()<HTTPClientDelegate, UITextFieldDelegate> {
+    BOOL _isEmail;
+    NSInteger _typeNum;
+}
+
+// 密码框
+@property (nonatomic, strong) LoginWindowTextField *passWindow;
+@property (nonatomic, strong) LoginWindowTextField *mailWindow;
+@property (nonatomic, strong) LoginWindowTextField *nameWindow;
+@property (nonatomic, strong) LoginWindowTextField *refereeText; // 推荐人
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property(nonatomic ,strong) NetWorkClient *requestClient;
+
+@end
+
+@implementation RegistrationViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    // 初始化数据
+    [self initData];
+    
+    // 初始化视图
+    [self initView];
+}
+
+/**
+ 初始化数据
+ */
+- (void)initData
+{
+    _typeNum = 0;
+    
+}
+
+/**
+ 初始化数据
+ */
+- (void)initView
+{
+    [self initNavigationBar];
+    
+    [self initContentView];
+}
+
+/**
+ * 初始化导航条
+ */
+- (void)initNavigationBar
+{
+    self.title = @"注册";
+    [self.view setBackgroundColor:KblackgroundColor];
+    
+    [self.navigationController.navigationBar setBarTintColor:KColor];
+    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                      [UIColor whiteColor], NSForegroundColorAttributeName,
+                                                                      [UIFont fontWithName:@"Arial-BoldMT" size:18.0], NSFontAttributeName, nil]];
+    
+    // 导航条 左边 返回按钮
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_back"] style:UIBarButtonItemStyleDone target:self action:@selector(backClick)];
+    backItem.tintColor = [UIColor whiteColor];
+    [self.navigationItem setLeftBarButtonItem:backItem];
+}
+
+/**
+ * 初始化内容详情
+ */
+- (void)initContentView
+{
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, -64, self.view.frame.size.width, self.view.frame.size.height+64)];
+    _scrollView.showsHorizontalScrollIndicator = NO;
+    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.backgroundColor = KblackgroundColor;
+    _scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 600);
+    [self.view addSubview:_scrollView];
+    
+    UIControl *viewControl = [[UIControl alloc] initWithFrame:self.view.bounds];
+    [viewControl addTarget:self action:@selector(ControlAction) forControlEvents:UIControlEventTouchUpInside];
+    [_scrollView addSubview:viewControl];
+    
+    UIButton *signBtn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    signBtn1.frame = CGRectMake(20, 80, kWidthWin, 35);
+    signBtn1.backgroundColor = [UIColor whiteColor];
+    [signBtn1.layer setMasksToBounds:YES];
+    [signBtn1.layer setCornerRadius:4.0]; //设置矩形四个圆角半径
+    [signBtn1.layer setBorderWidth:1.0];   //边框宽度
+    [signBtn1.layer setBorderColor:KlayerBorder.CGColor];//边框颜色
+    [_scrollView addSubview:signBtn1];
+    
+    // 邮箱 输入框
+    _mailWindow = [[LoginWindowTextField alloc] initWithFrame:CGRectMake(20, 80, kWidthWin, 35)];
+    [_mailWindow textWithleftImage:@"login_mail" rightImage:nil placeName:@"邮箱"];
+    [_scrollView addSubview:_mailWindow];
+    _mailWindow.delegate = self;
+    
+    
+    UIButton *signBtn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    signBtn2.frame = CGRectMake(20, 130, kWidthWin, 35);
+    signBtn2.backgroundColor = [UIColor whiteColor];
+    [signBtn2.layer setMasksToBounds:YES];
+    [signBtn2.layer setCornerRadius:4.0]; //设置矩形四个圆角半径
+    [signBtn2.layer setBorderWidth:1.0];   //边框宽度
+    [signBtn2.layer setBorderColor:KlayerBorder.CGColor];//边框颜色
+    [_scrollView addSubview:signBtn2];
+    
+    // 用户名 输入框
+    _nameWindow = [[LoginWindowTextField alloc] initWithFrame:CGRectMake(20, 130, kWidthWin, 35)];
+    [_nameWindow textWithleftImage:@"login_icon" rightImage:nil placeName:@"用户名"];
+    
+    UIButton *signBtn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+    signBtn3.frame = CGRectMake(20, 180, kWidthWin, 35);
+    signBtn3.backgroundColor = [UIColor whiteColor];
+    [signBtn3.layer setMasksToBounds:YES];
+    [signBtn3.layer setCornerRadius:4.0]; //设置矩形四个圆角半径
+    [signBtn3.layer setBorderWidth:1.0];   //边框宽度
+    [signBtn3.layer setBorderColor:KlayerBorder.CGColor];//边框颜色
+    [_scrollView addSubview:signBtn3];
+    // 密码 输入框
+    _passWindow = [[LoginWindowTextField alloc] initWithFrame:CGRectMake(20, 180, kWidthWin, 35)];
+    _passWindow.secureTextEntry = YES;
+    [_passWindow textWithleftImage:@"login_lock" rightImage:nil placeName:@"密码"];
+    
+    [_scrollView addSubview:_nameWindow];
+    [_scrollView addSubview:_passWindow];
+    
+    UISwitch *_rightSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(kWidthWin - 40, 182, 30, 24)];
+    [_rightSwitch setOn:YES];
+    [_rightSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    [_scrollView addSubview:_rightSwitch];
+    
+    UIButton *signBtn4 = [UIButton buttonWithType:UIButtonTypeCustom];
+    signBtn4.frame = CGRectMake(20, 230, kWidthWin, 35);
+    signBtn4.backgroundColor = [UIColor whiteColor];
+    [signBtn4.layer setMasksToBounds:YES];
+    [signBtn4.layer setCornerRadius:4.0]; //设置矩形四个圆角半径
+    [signBtn4.layer setBorderWidth:1.0];   //边框宽度
+    [signBtn4.layer setBorderColor:KlayerBorder.CGColor];//边框颜色
+    [_scrollView addSubview:signBtn4];
+    
+    // 推荐人 输入框
+    _refereeText = [[LoginWindowTextField alloc] initWithFrame:CGRectMake(20, 230, kWidthWin, 35)];
+    [_refereeText textWithleftImage:@"login_referee" rightImage:nil placeName:@"推荐人"];
+    [_scrollView addSubview:_refereeText];
+    
+    UILabel *_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 265, kWidthWin, 30)];
+    _titleLabel.text = @"请输入6-16位，字母和数字组成的密码";
+    _titleLabel.font = [UIFont fontWithName:@"Arial" size:13.0];
+    [_scrollView addSubview:_titleLabel];
+    
+    UIButton *signBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    signBtn.frame = CGRectMake(20, 310, kWidthWin, 35);
+    signBtn.backgroundColor = GreenColor;
+    [signBtn setTitle:@"完 成" forState:UIControlStateNormal];
+    [signBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    signBtn.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:15.0];
+    [signBtn.layer setMasksToBounds:YES];
+    [signBtn.layer setCornerRadius:6.0]; //设置矩形四个圆角半径
+    [signBtn addTarget:self action:@selector(CompleteClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    [_scrollView addSubview:signBtn];
+    
+    UIButton *getBackbutton = [[UIButton alloc] initWithFrame:CGRectMake(20, 350, 180, 30)];
+    [getBackbutton setTitle:@"华夏企贷网会员服务协议" forState:UIControlStateNormal];
+    [getBackbutton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    getBackbutton.titleLabel.font = [UIFont fontWithName:@"Arial-BoldMT" size:14.0];
+    [getBackbutton addTarget:self action:@selector(getBackClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    [_scrollView addSubview:getBackbutton];
+}
+
+/**
+ * backButton
+ */
+- (void)backClick
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+/**
+ * 密码输入框右边的开关按钮
+ * 切换密码是否明文
+ */
+- (void)switchAction:(UISwitch *)sender
+{
+    UISwitch *switchButton = sender;
+    
+    BOOL isButtonOn = [switchButton isOn];
+    if (isButtonOn) {
+        _passWindow.secureTextEntry = YES;
+    }else {
+        _passWindow.secureTextEntry = NO;
+    }
+}
+
+// 点击 完成 按钮
+- (void)CompleteClick
+{
+    _typeNum = 0;
+    DLOG(@"_refereeText -> %@", _refereeText.text);
+    
+    [self ControlAction];
+    
+    if (_isEmail) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        NSString *email = _mailWindow.text;
+        NSString *name = _nameWindow.text;
+        NSString *password1 = [NSString encrypt3DES:_passWindow.text key:DESkey];
+        [parameters setObject:@"2" forKey:@"OPT"];
+        [parameters setObject:@"" forKey:@"body"];
+        [parameters setObject:email forKey:@"email"];
+        [parameters setObject:name forKey:@"name"];
+        [parameters setObject:password1 forKey:@"pwd"];
+        [parameters setObject:_refereeText.text forKey:@"referrerName"];
+        
+        if (_requestClient == nil) {
+            _requestClient = [[NetWorkClient alloc] init];
+            _requestClient.delegate = self;
+        }
+        [_requestClient requestGet:@"app/services" withParameters:parameters];
+
+    }else {
+       [SVProgressHUD showErrorWithStatus:@"资料输入有误"];
+    }
+}
+
+// 会员用户协议
+- (void)getBackClick
+{
+    MemberProtocolViewController *protocolView = [[MemberProtocolViewController alloc] init];
+    protocolView.opt = @"8";
+    [self.navigationController pushViewController:protocolView animated:YES];
+}
+
+#pragma mark 点击空白处收回键盘
+- (void)ControlAction
+{
+    for (UITextField *textField in [self.scrollView subviews]) {
+        
+        if ([textField isKindOfClass: [UITextField class]]) {
+            
+            [textField  resignFirstResponder];
+        }
+    }
+}
+
+#pragma HTTPClientDelegate 网络数据回调代理
+-(void) startRequest
+{
+
+}
+
+// 返回成功
+-(void) httpResponseSuccess:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didSuccessWithObject:(id)obj
+{
+
+    NSDictionary *dics = obj;
+    
+    if ([[NSString stringWithFormat:@"%@",[dics objectForKey:@"error"]] isEqualToString:@"-1"]) {
+        
+        DLOG(@"返回成功  id -> %@",[obj objectForKey:@"id"]);
+                
+        [[AppDefaultUtil sharedInstance] setDefaultUserName:_nameWindow.text];// 保存用户账号
+//        [[AppDefaultUtil sharedInstance] setDefaultUserNoPassword:_passWindow.text];// 保存用户密码
+      
+        
+//        LoginViewController *loginView = [[LoginViewController alloc] init];
+//        loginView.selfView = self.navigationController;
+//        [self.navigationController pushViewController:loginView animated:YES];
+        if (_typeNum == 0) {
+            
+             [self registrationLogin:_nameWindow.text pwd:_passWindow.text];
+            
+        }else{
+        
+            
+            DLOG(@"返回成功  username -> %@",[obj objectForKey:@"username"]);
+            DLOG(@"返回成功  id -> %@",[obj objectForKey:@"id"]);
+            DLOG(@"返回成功  vipStatus -> %@",[obj objectForKey:@"vipStatus"]);
+            DLOG(@"返回成功  imgUrl is  -> %@",[NSString stringWithFormat:@"%@%@", Baseurl, [obj objectForKey:@"headImg"]]);
+            
+            UserInfo *usermodel = [[UserInfo alloc] init];
+            usermodel.userName = [obj objectForKey:@"username"];
+            
+            if ([[NSString stringWithFormat:@"%@",[obj objectForKey:@"headImg"]] hasPrefix:@"http"]) {
+                
+                usermodel.userImg = [NSString stringWithFormat:@"%@",[obj objectForKey:@"headImg"]];
+            }
+            else
+            {
+                usermodel.userImg = [NSString stringWithFormat:@"%@%@", Baseurl, [obj objectForKey:@"headImg"]]; 
+            }
+            
+            if([[NSString stringWithFormat:@"%@",[obj objectForKey:@"creditRating"]] hasPrefix:@"http"])
+            {
+                usermodel.userCreditRating = [obj objectForKey:@"creditRating"];
+                
+            }else{
+                usermodel.userCreditRating =  [NSString stringWithFormat:@"%@%@", Baseurl, [obj objectForKey:@"creditRating"]];
+            }
+            usermodel.userLimit = [obj objectForKey:@"creditLimit"];
+            usermodel.isVipStatus = [obj objectForKey:@"vipStatus"];
+            usermodel.userId = [obj objectForKey:@"id"];
+            usermodel.isLogin = @"1";
+            usermodel.deviceType = @"2";
+            usermodel.accountAmount = [NSString stringWithFormat:@"%.2f", [[obj objectForKey:@"accountAmount"] doubleValue]];
+            usermodel.availableBalance = [NSString stringWithFormat:@"%.2f", [[obj objectForKey:@"availableBalance"] doubleValue]];
+            
+            AppDelegateInstance.userInfo = usermodel;
+            
+            // 通知全局广播 LeftMenuController 修改UI操作
+            [[NSNotificationCenter defaultCenter]  postNotificationName:@"update" object:[obj objectForKey:@"username"]];
+            
+            [self loginSuccess];// 登录成功
+
+        }
+       
+        
+    }else {
+        DLOG(@"返回失败  msg -> %@",[obj objectForKey:@"msg"]);
+        
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@", [obj objectForKey:@"msg"]]];
+    }
+}
+
+// 返回失败
+-(void) httpResponseFailure:(NetWorkClient *)client dataTask:(NSURLSessionDataTask *)task didFailWithError:(NSError *)error
+{
+    // 服务器返回数据异常
+    [SVProgressHUD showErrorWithStatus:@"网络异常"];
+}
+
+// 无可用的网络
+-(void) networkError
+{
+    [SVProgressHUD showErrorWithStatus:@"无可用网络"];
+}
+
+#pragma mark 调用文本代理
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    DLOG(@"textField -> %@", textField.text);
+    
+    if ([textField.text isEmail]) {
+        DLOG(@"email is right");
+        
+        _isEmail = YES;
+    }else {
+        DLOG(@"email is wrong");
+        false;
+        
+        [SVProgressHUD showErrorWithStatus:@"邮箱格式错误，请重新输入!"];
+    }
+}
+
+-(void) loginSuccess
+{
+    
+    // 登录成功，记住密码. 保存账号密码到UserDefault
+
+    [[AppDefaultUtil sharedInstance] setDefaultUserName:AppDelegateInstance.userInfo.userName];// 保存用户昵称
+    [[AppDefaultUtil sharedInstance] setDefaultAccount:_nameWindow.text];// 保存用户账号
+    NSString *pwdStr = [NSString encrypt3DES:_passWindow.text key:DESkey];//用户密码3Des加密
+    [[AppDefaultUtil sharedInstance] setDefaultUserPassword:pwdStr];// 保存用户密码（des加密）
+    [[AppDefaultUtil sharedInstance] setDefaultHeaderImageUrl:AppDelegateInstance.userInfo.userImg];// 保存用户头像
+    [[AppDefaultUtil sharedInstance] setdeviceType:AppDelegateInstance.userInfo.deviceType];// 保存设备型号
+    
+    DLOG(@"name is =======> %@",_nameWindow.text);
+    
+    FristGestureLockViewController *controller = [[FristGestureLockViewController alloc] init];
+    
+    [self.navigationController pushViewController:controller animated:YES];
+    
+}
+
+- (void)registrationLogin:(NSString *)name pwd:(NSString *)pwd {
+    
+    _nameWindow.text = name;
+    _passWindow.text = pwd;
+    _typeNum = 1;
+    
+    // 账号：1  密码：1
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    NSString *password = [NSString encrypt3DES:pwd key:DESkey];
+    [parameters setObject:@"1" forKey:@"OPT"];
+    [parameters setObject:@"" forKey:@"body"];
+    [parameters setObject:name forKey:@"name"];
+    [parameters setObject:password forKey:@"pwd"];
+    if(AppDelegateInstance.userId !=nil && AppDelegateInstance.channelId != nil)
+    {
+        [parameters setObject:AppDelegateInstance.userId forKey:@"userId"];
+        [parameters setObject:AppDelegateInstance.channelId forKey:@"channelId"];
+        
+    }else {
+        
+        
+        [parameters setObject:@"" forKey:@"userId"];
+        [parameters setObject:@"" forKey:@"channelId"];
+        
+    }
+    [parameters setObject:@"2" forKey:@"deviceType"];
+    
+    if (_requestClient == nil) {
+        _requestClient = [[NetWorkClient alloc] init];
+        _requestClient.delegate = self;
+    }
+    [_requestClient requestGet:@"app/services" withParameters:parameters];
+}
+
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (_requestClient != nil) {
+        [_requestClient cancel];
+    }
+}
+
+@end
