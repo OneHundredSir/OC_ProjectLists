@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WHDYaoYiYao">
+            <connections>
+                <outlet property="downpart" destination="rAu-d6-FPP" id="oLq-Lf-4Vm"/>
+                <outlet property="upPart" destination="8Iz-zt-tdy" id="lzc-Vv-4HQ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yaoyiyaodi" translatesAutoresizingMaskIntoConstraints="NO" id="hXG-sd-apJ">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yaoyiyao1" translatesAutoresizingMaskIntoConstraints="NO" id="8Iz-zt-tdy">
+                    <rect key="frame" x="100" y="216" width="120" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="7XB-LY-GXA"/>
+                        <constraint firstAttribute="width" constant="120" id="Glm-Lz-vdj"/>
+                    </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yaoyiyao2" translatesAutoresizingMaskIntoConstraints="NO" id="rAu-d6-FPP">
+                    <rect key="frame" x="100" y="280" width="120" height="64"/>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="hXG-sd-apJ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="3OG-Ff-PCV"/>
+                <constraint firstAttribute="trailing" secondItem="hXG-sd-apJ" secondAttribute="trailing" id="3SH-Sq-fV6"/>
+                <constraint firstItem="hXG-sd-apJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3XR-xk-iTU"/>
+                <constraint firstItem="rAu-d6-FPP" firstAttribute="height" secondItem="8Iz-zt-tdy" secondAttribute="height" id="3qL-48-OXy"/>
+                <constraint firstItem="rAu-d6-FPP" firstAttribute="centerX" secondItem="8Iz-zt-tdy" secondAttribute="centerX" id="ExY-Eu-Ot0"/>
+                <constraint firstItem="8Iz-zt-tdy" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="100" id="Ryq-n1-IQh"/>
+                <constraint firstItem="rAu-d6-FPP" firstAttribute="width" secondItem="8Iz-zt-tdy" secondAttribute="width" id="bjd-bs-2YY"/>
+                <constraint firstAttribute="bottom" secondItem="hXG-sd-apJ" secondAttribute="bottom" id="eIp-GY-SBW"/>
+                <constraint firstItem="rAu-d6-FPP" firstAttribute="top" secondItem="8Iz-zt-tdy" secondAttribute="bottom" id="fbs-ig-UTG"/>
+                <constraint firstAttribute="trailing" secondItem="8Iz-zt-tdy" secondAttribute="trailing" constant="100" id="vUy-oO-x3p"/>
+                <constraint firstItem="8Iz-zt-tdy" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="216" id="xCg-zf-gwY"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="yaoyiyao1" width="235" height="160"/>
+        <image name="yaoyiyao2" width="235" height="160"/>
+        <image name="yaoyiyaodi" width="320" height="504"/>
+    </resources>
+</document>

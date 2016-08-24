@@ -1,0 +1,43 @@
+//
+//  PrefixHeader.pch
+//  xiaorizi
+//
+//  Created by HUN on 16/6/1.
+//  Copyright © 2016年 hundred Company. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+//通用头文件
+#import "WHDNavigationController.h"
+#import "WHDViewController.h"
+#import "WHDTarbbarController.h"
+#import "WHDSeletedcities.h"
+
+//common
+#import "WHDWebViewController.h"
+#import "WHDShowMyInfo.h"
+#import "WHDRegisterViewController.h"
+#import "AppDelegate.h"
+
+//工具类
+#import "WHDview.h"
+#import "WHDButton.h"
+#import "UIButton+WHDtool.h"
+#import "UIView+WHDSetPosition.h"
+//第三方
+#import <MJExtension.h>
+#import <MJRefresh.h>
+#import <SDImageCache.h>
+#import <UIImageView+WebCache.h>
+#import <MBProgressHUD.h>
+//宏定义
+#define VIEWW  self.view.frame.size.width
+#define VIEWH  self.view.frame.size.height
+
+#define myCellID @"cell"
+#define myFontNum [UIFont systemFontOfSize:14]
+#define myFontTitle [UIFont systemFontOfSize:18]
+//debug调试用的
+
+#endif /* PrefixHeader_pch */

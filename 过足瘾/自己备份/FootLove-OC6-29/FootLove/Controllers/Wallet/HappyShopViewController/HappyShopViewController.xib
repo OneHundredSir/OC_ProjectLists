@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HappyShopViewController">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1ag-fS-AGa">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PCl-xf-boe">
+                            <rect key="frame" x="0.0" y="0.0" width="181" height="80"/>
+                            <state key="normal" title="Button"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GHM-JA-5O7">
+                            <rect key="frame" x="196" y="0.0" width="179" height="80"/>
+                            <state key="normal" title="Button"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="GHM-JA-5O7" firstAttribute="leading" secondItem="PCl-xf-boe" secondAttribute="trailing" id="5Q0-on-vk6"/>
+                        <constraint firstItem="GHM-JA-5O7" firstAttribute="width" secondItem="PCl-xf-boe" secondAttribute="width" id="BOp-8d-7wi"/>
+                        <constraint firstAttribute="bottom" secondItem="PCl-xf-boe" secondAttribute="bottom" id="MJ3-RE-kr2"/>
+                        <constraint firstItem="GHM-JA-5O7" firstAttribute="top" secondItem="1ag-fS-AGa" secondAttribute="top" id="OrD-HC-2Pv"/>
+                        <constraint firstAttribute="bottom" secondItem="GHM-JA-5O7" secondAttribute="bottom" id="RYp-5e-NMu"/>
+                        <constraint firstItem="GHM-JA-5O7" firstAttribute="leading" secondItem="PCl-xf-boe" secondAttribute="trailing" constant="5" id="U9O-9j-4Kk"/>
+                        <constraint firstItem="PCl-xf-boe" firstAttribute="top" secondItem="1ag-fS-AGa" secondAttribute="top" id="YpM-Z1-y8s"/>
+                        <constraint firstAttribute="height" constant="80" id="aHe-0H-AgU"/>
+                        <constraint firstItem="PCl-xf-boe" firstAttribute="leading" secondItem="1ag-fS-AGa" secondAttribute="leading" id="pzN-NL-c7v"/>
+                        <constraint firstAttribute="trailing" secondItem="GHM-JA-5O7" secondAttribute="trailing" constant="5" id="yen-UB-7Jn"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="5Q0-on-vk6"/>
+                        </mask>
+                    </variation>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="1ag-fS-AGa" secondAttribute="trailing" id="EUk-IP-Gum"/>
+                <constraint firstItem="1ag-fS-AGa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="IJ6-Tr-HQT"/>
+                <constraint firstItem="1ag-fS-AGa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="gWz-wx-p8s"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+        </view>
+    </objects>
+</document>

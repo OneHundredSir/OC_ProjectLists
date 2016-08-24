@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="WHDExCell" rowHeight="200" id="fyh-Pt-N9F" customClass="WHDExCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="192"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fyh-Pt-N9F" id="TXt-A9-aOv">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="191"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="nDw-SM-HiN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="140"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="140" id="gmM-Hv-VHS"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="用创意和热情感知国际甜" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vzV-57-SHx">
+                        <rect key="frame" x="0.0" y="154" width="320" height="24"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="nDw-SM-HiN" firstAttribute="top" secondItem="TXt-A9-aOv" secondAttribute="top" id="JLe-pf-mA8"/>
+                    <constraint firstAttribute="trailing" secondItem="nDw-SM-HiN" secondAttribute="trailing" id="chS-cC-4hJ"/>
+                    <constraint firstItem="nDw-SM-HiN" firstAttribute="leading" secondItem="TXt-A9-aOv" secondAttribute="leading" id="kH5-i6-661"/>
+                    <constraint firstItem="vzV-57-SHx" firstAttribute="top" secondItem="nDw-SM-HiN" secondAttribute="bottom" constant="14" id="rgB-mZ-Cxi"/>
+                    <constraint firstItem="vzV-57-SHx" firstAttribute="trailing" secondItem="nDw-SM-HiN" secondAttribute="trailing" id="wYa-l4-dGf"/>
+                    <constraint firstItem="vzV-57-SHx" firstAttribute="leading" secondItem="nDw-SM-HiN" secondAttribute="leading" id="xtv-3X-MIX"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="EXimage" destination="nDw-SM-HiN" id="ZBr-4E-4wy"/>
+                <outlet property="EXlabel" destination="vzV-57-SHx" id="ewd-BG-pXg"/>
+            </connections>
+            <point key="canvasLocation" x="373" y="360"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="2.jpg" width="1000" height="572"/>
+    </resources>
+</document>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="93" id="KGk-i7-Jjw" customClass="MyTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="93"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="300" height="92"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="269-FL-7b5">
+                        <rect key="frame" x="8" y="8" width="75" height="75"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="75" id="Sp7-1c-tAJ"/>
+                            <constraint firstAttribute="width" constant="75" id="dYg-ug-I7t"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UzV-0i-rRa">
+                        <rect key="frame" x="98" y="8" width="38" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JUJ-8I-6ID">
+                        <rect key="frame" x="254" y="8" width="38" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HN7-kt-Ws5">
+                        <rect key="frame" x="98" y="41" width="38" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="HN7-kt-Ws5" firstAttribute="top" secondItem="UzV-0i-rRa" secondAttribute="bottom" constant="15" id="DGq-JG-QxG"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="HN7-kt-Ws5" secondAttribute="bottom" constant="25" id="O8L-Zn-1JX"/>
+                    <constraint firstItem="UzV-0i-rRa" firstAttribute="leading" secondItem="269-FL-7b5" secondAttribute="trailing" constant="15" id="Zpd-yQ-YWA"/>
+                    <constraint firstItem="HN7-kt-Ws5" firstAttribute="leading" secondItem="UzV-0i-rRa" secondAttribute="leading" id="cmD-MW-XHG"/>
+                    <constraint firstItem="JUJ-8I-6ID" firstAttribute="centerY" secondItem="UzV-0i-rRa" secondAttribute="centerY" id="cu9-Rh-Kmd"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="JUJ-8I-6ID" secondAttribute="trailing" id="eM2-Y7-7AV"/>
+                    <constraint firstItem="UzV-0i-rRa" firstAttribute="top" secondItem="269-FL-7b5" secondAttribute="top" id="paA-XG-hzd"/>
+                    <constraint firstItem="269-FL-7b5" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="qdA-y8-t17"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="269-FL-7b5" secondAttribute="leading" id="sXb-v7-NSm"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="count" destination="HN7-kt-Ws5" id="M8J-dR-M7S"/>
+                <outlet property="distance" destination="JUJ-8I-6ID" id="IbW-te-rbC"/>
+                <outlet property="dpImageview" destination="269-FL-7b5" id="WsM-vZ-Apu"/>
+                <outlet property="dpName" destination="UzV-0i-rRa" id="65B-a3-s2a"/>
+            </connections>
+            <point key="canvasLocation" x="273" y="344.5"/>
+        </tableViewCell>
+    </objects>
+</document>

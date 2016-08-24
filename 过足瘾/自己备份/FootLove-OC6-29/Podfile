@@ -1,0 +1,13 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, "7.0"
+
+pod 'MJRefresh'
+pod 'SDWebImage'
+pod 'XMPPFramework'
+pod 'FMDB'
+pod 'MBProgressHUD'
+
+
+target :FootLove do
+  # pod 'Kiwi'
+end

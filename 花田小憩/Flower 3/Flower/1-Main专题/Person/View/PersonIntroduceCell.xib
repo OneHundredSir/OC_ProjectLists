@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PersonIntroduceCell" id="gTV-IL-0wX" customClass="PersonIntroduceCell">
+            <rect key="frame" x="0.0" y="0.0" width="324" height="68"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="324" height="68"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hb3-aU-1e0">
+                        <rect key="frame" x="10" y="27" width="304" height="15"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="woI-Qe-n1m">
+                        <rect key="frame" x="16" y="67" width="292" height="1"/>
+                        <color key="backgroundColor" red="0.35294117650000001" green="0.35294117650000001" blue="0.35294117650000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="afc-es-dKt"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5oF-tJ-FAS">
+                        <rect key="frame" x="10" y="47" width="304" height="12"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <constraints>
+                <constraint firstItem="woI-Qe-n1m" firstAttribute="top" secondItem="5oF-tJ-FAS" secondAttribute="bottom" constant="8" id="8pX-ux-Awn"/>
+                <constraint firstAttribute="bottom" secondItem="woI-Qe-n1m" secondAttribute="bottom" id="EFB-WP-yue"/>
+                <constraint firstAttribute="trailing" secondItem="woI-Qe-n1m" secondAttribute="trailing" id="GTB-yl-gFH"/>
+                <constraint firstItem="Hb3-aU-1e0" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="HgR-4K-hFo"/>
+                <constraint firstItem="woI-Qe-n1m" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Kex-0g-AKg"/>
+                <constraint firstAttribute="trailing" secondItem="Hb3-aU-1e0" secondAttribute="trailing" constant="10" id="YZ2-35-353"/>
+                <constraint firstItem="woI-Qe-n1m" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" multiplier="0.9" id="Zpg-VU-EZw"/>
+                <constraint firstItem="woI-Qe-n1m" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="bLl-wC-qCu"/>
+                <constraint firstItem="5oF-tJ-FAS" firstAttribute="top" secondItem="Hb3-aU-1e0" secondAttribute="bottom" constant="5" id="fa9-4k-xCw"/>
+                <constraint firstItem="5oF-tJ-FAS" firstAttribute="leading" secondItem="Hb3-aU-1e0" secondAttribute="leading" id="lS4-ud-kd5"/>
+                <constraint firstItem="Hb3-aU-1e0" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="t8G-ch-gBW"/>
+                <constraint firstItem="5oF-tJ-FAS" firstAttribute="trailing" secondItem="Hb3-aU-1e0" secondAttribute="trailing" id="uqu-OA-LNJ"/>
+                <constraint firstItem="Hb3-aU-1e0" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" priority="250" id="xKY-B1-3K9"/>
+            </constraints>
+            <size key="customSize" width="324" height="68"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="HgR-4K-hFo"/>
+                    <exclude reference="GTB-yl-gFH"/>
+                    <exclude reference="Kex-0g-AKg"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="detailLB" destination="5oF-tJ-FAS" id="Cs8-Ab-UCN"/>
+                <outlet property="introduceLB" destination="Hb3-aU-1e0" id="UYm-8f-T5c"/>
+            </connections>
+            <point key="canvasLocation" x="135" y="203"/>
+        </collectionViewCell>
+    </objects>
+</document>

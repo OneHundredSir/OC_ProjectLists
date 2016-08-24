@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="authorCell" rowHeight="66" id="KGk-i7-Jjw" customClass="authorCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Brt-YG-jdk">
+                        <rect key="frame" x="13" y="10" width="45" height="45"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="Brt-YG-jdk" secondAttribute="height" id="QvE-Tn-nLz"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="黄色v" translatesAutoresizingMaskIntoConstraints="NO" id="lll-EK-lRs">
+                        <rect key="frame" x="38" y="38" width="22" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="lll-EK-lRs" secondAttribute="height" id="GWI-BR-4tl"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="花田消息" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ni-sV-iud">
+                        <rect key="frame" x="68" y="24" width="60" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="arN-j1-vGl">
+                        <rect key="frame" x="286" y="18" width="15" height="30"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="lll-EK-lRs" firstAttribute="trailing" secondItem="Brt-YG-jdk" secondAttribute="trailing" constant="2" id="0AD-v1-abc"/>
+                    <constraint firstItem="Brt-YG-jdk" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="5ZI-hT-dY3"/>
+                    <constraint firstItem="lll-EK-lRs" firstAttribute="width" secondItem="lll-EK-lRs" secondAttribute="height" id="GiQ-eP-cv2"/>
+                    <constraint firstItem="0ni-sV-iud" firstAttribute="centerY" secondItem="Brt-YG-jdk" secondAttribute="centerY" id="HpE-A0-IuF"/>
+                    <constraint firstItem="lll-EK-lRs" firstAttribute="height" secondItem="Brt-YG-jdk" secondAttribute="height" multiplier="0.5" id="N4Z-zS-bn8"/>
+                    <constraint firstItem="Brt-YG-jdk" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="5" id="SgZ-pL-kWe"/>
+                    <constraint firstItem="Brt-YG-jdk" firstAttribute="width" secondItem="Brt-YG-jdk" secondAttribute="height" id="UEa-Tj-UQV"/>
+                    <constraint firstItem="lll-EK-lRs" firstAttribute="bottom" secondItem="Brt-YG-jdk" secondAttribute="bottom" constant="5" id="bP8-Oz-tC7"/>
+                    <constraint firstItem="0ni-sV-iud" firstAttribute="leading" secondItem="Brt-YG-jdk" secondAttribute="trailing" constant="10" id="hXm-I8-ovB"/>
+                    <constraint firstItem="Brt-YG-jdk" firstAttribute="height" secondItem="H2p-sc-9uM" secondAttribute="height" multiplier="0.7" id="unp-pX-0AM"/>
+                    <constraint firstItem="arN-j1-vGl" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="vAB-SK-f8h"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="arN-j1-vGl" secondAttribute="trailing" constant="11" id="xMe-Ya-CTq"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="UEa-Tj-UQV"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="VIcon" destination="lll-EK-lRs" id="vRq-KO-uBh"/>
+                <outlet property="numLB" destination="arN-j1-vGl" id="4y2-Mq-O9H"/>
+                <outlet property="personIcon" destination="Brt-YG-jdk" id="SBZ-j4-kad"/>
+                <outlet property="titleLB" destination="0ni-sV-iud" id="pDr-aA-D8m"/>
+            </connections>
+            <point key="canvasLocation" x="225" y="242"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="黄色v" width="16" height="16"/>
+    </resources>
+</document>

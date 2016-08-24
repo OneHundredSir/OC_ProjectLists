@@ -1,0 +1,769 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8ED50F721D2201760022EC51 /* WHDmodel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED50F711D2201760022EC51 /* WHDmodel.m */; };
+		8ED6BCD21D20FCF60024251F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BCD11D20FCF60024251F /* main.m */; };
+		8ED6BCD51D20FCF60024251F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BCD41D20FCF60024251F /* AppDelegate.m */; };
+		8ED6BCDB1D20FCF60024251F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BCD91D20FCF60024251F /* Main.storyboard */; };
+		8ED6BCDD1D20FCF60024251F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BCDC1D20FCF60024251F /* Assets.xcassets */; };
+		8ED6BCE01D20FCF60024251F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BCDE1D20FCF60024251F /* LaunchScreen.storyboard */; };
+		8ED6BCEB1D20FCF60024251F /* FootLoveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BCEA1D20FCF60024251F /* FootLoveTests.m */; };
+		8ED6BCF61D20FCF60024251F /* FootLoveUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BCF51D20FCF60024251F /* FootLoveUITests.m */; };
+		8ED6BD0D1D20FF730024251F /* WHDBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD0C1D20FF730024251F /* WHDBaseViewController.m */; };
+		8ED6BD111D20FF8B0024251F /* WHDDiscoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD0F1D20FF8B0024251F /* WHDDiscoverViewController.m */; };
+		8ED6BD121D20FF8B0024251F /* WHDDiscoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD101D20FF8B0024251F /* WHDDiscoverViewController.xib */; };
+		8ED6BD161D20FF970024251F /* WHDMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD141D20FF970024251F /* WHDMessagesViewController.m */; };
+		8ED6BD171D20FF970024251F /* WHDMessagesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD151D20FF970024251F /* WHDMessagesViewController.xib */; };
+		8ED6BD1E1D20FFAE0024251F /* WHDNearsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD1C1D20FFAE0024251F /* WHDNearsViewController.m */; };
+		8ED6BD1F1D20FFAE0024251F /* WHDNearsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD1D1D20FFAE0024251F /* WHDNearsViewController.xib */; };
+		8ED6BD261D20FFCC0024251F /* WHDWalletViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD241D20FFCC0024251F /* WHDWalletViewController.m */; };
+		8ED6BD271D20FFCC0024251F /* WHDWalletViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD251D20FFCC0024251F /* WHDWalletViewController.xib */; };
+		8ED6BD2A1D20FFD80024251F /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD291D20FFD80024251F /* RootViewController.m */; };
+		8ED6BD301D21001D0024251F /* WHDBaseTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD2F1D21001D0024251F /* WHDBaseTabBarController.m */; };
+		8ED6BD331D2100360024251F /* WHDBaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD321D2100360024251F /* WHDBaseNavigationController.m */; };
+		8ED6BD371D2102500024251F /* PersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD351D2102500024251F /* PersonViewController.m */; };
+		8ED6BD381D2102500024251F /* PersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD361D2102500024251F /* PersonViewController.xib */; };
+		8ED6BD3A1D211E100024251F /* barIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD391D211E100024251F /* barIcon.xcassets */; };
+		8ED6BD3C1D215D540024251F /* UserIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD3B1D215D540024251F /* UserIcon.xcassets */; };
+		8ED6BD401D217A680024251F /* BeginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD3E1D217A680024251F /* BeginViewController.m */; };
+		8ED6BD411D217A680024251F /* BeginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD3F1D217A680024251F /* BeginViewController.xib */; };
+		8ED6BD451D2191580024251F /* WHDNearsCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED6BD431D2191580024251F /* WHDNearsCollectionViewCell.m */; };
+		8ED6BD461D2191580024251F /* WHDNearsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ED6BD441D2191580024251F /* WHDNearsCollectionViewCell.xib */; };
+		E964A8A1A272AEDB9BC7DA51 /* libPods-FootLove.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0C8AFE0832E17E10CBDAC8 /* libPods-FootLove.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8ED6BCE71D20FCF60024251F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8ED6BCC51D20FCF60024251F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8ED6BCCC1D20FCF60024251F;
+			remoteInfo = FootLove;
+		};
+		8ED6BCF21D20FCF60024251F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8ED6BCC51D20FCF60024251F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8ED6BCCC1D20FCF60024251F;
+			remoteInfo = FootLove;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8ED50F701D2201760022EC51 /* WHDmodel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDmodel.h; sourceTree = "<group>"; };
+		8ED50F711D2201760022EC51 /* WHDmodel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDmodel.m; sourceTree = "<group>"; };
+		8ED6BCCD1D20FCF60024251F /* FootLove.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FootLove.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8ED6BCD11D20FCF60024251F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8ED6BCD31D20FCF60024251F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		8ED6BCD41D20FCF60024251F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		8ED6BCDA1D20FCF60024251F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8ED6BCDC1D20FCF60024251F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8ED6BCDF1D20FCF60024251F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8ED6BCE11D20FCF60024251F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8ED6BCE61D20FCF60024251F /* FootLoveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FootLoveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8ED6BCEA1D20FCF60024251F /* FootLoveTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FootLoveTests.m; sourceTree = "<group>"; };
+		8ED6BCEC1D20FCF60024251F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8ED6BCF11D20FCF60024251F /* FootLoveUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FootLoveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8ED6BCF51D20FCF60024251F /* FootLoveUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FootLoveUITests.m; sourceTree = "<group>"; };
+		8ED6BCF71D20FCF60024251F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8ED6BD0A1D20FEC10024251F /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		8ED6BD0B1D20FF730024251F /* WHDBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDBaseViewController.h; sourceTree = "<group>"; };
+		8ED6BD0C1D20FF730024251F /* WHDBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDBaseViewController.m; sourceTree = "<group>"; };
+		8ED6BD0E1D20FF8B0024251F /* WHDDiscoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDDiscoverViewController.h; sourceTree = "<group>"; };
+		8ED6BD0F1D20FF8B0024251F /* WHDDiscoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDDiscoverViewController.m; sourceTree = "<group>"; };
+		8ED6BD101D20FF8B0024251F /* WHDDiscoverViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WHDDiscoverViewController.xib; sourceTree = "<group>"; };
+		8ED6BD131D20FF970024251F /* WHDMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDMessagesViewController.h; sourceTree = "<group>"; };
+		8ED6BD141D20FF970024251F /* WHDMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDMessagesViewController.m; sourceTree = "<group>"; };
+		8ED6BD151D20FF970024251F /* WHDMessagesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WHDMessagesViewController.xib; sourceTree = "<group>"; };
+		8ED6BD1B1D20FFAE0024251F /* WHDNearsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDNearsViewController.h; sourceTree = "<group>"; };
+		8ED6BD1C1D20FFAE0024251F /* WHDNearsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDNearsViewController.m; sourceTree = "<group>"; };
+		8ED6BD1D1D20FFAE0024251F /* WHDNearsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WHDNearsViewController.xib; sourceTree = "<group>"; };
+		8ED6BD231D20FFCC0024251F /* WHDWalletViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDWalletViewController.h; sourceTree = "<group>"; };
+		8ED6BD241D20FFCC0024251F /* WHDWalletViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDWalletViewController.m; sourceTree = "<group>"; };
+		8ED6BD251D20FFCC0024251F /* WHDWalletViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WHDWalletViewController.xib; sourceTree = "<group>"; };
+		8ED6BD281D20FFD80024251F /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		8ED6BD291D20FFD80024251F /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		8ED6BD2E1D21001D0024251F /* WHDBaseTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDBaseTabBarController.h; sourceTree = "<group>"; };
+		8ED6BD2F1D21001D0024251F /* WHDBaseTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDBaseTabBarController.m; sourceTree = "<group>"; };
+		8ED6BD311D2100360024251F /* WHDBaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDBaseNavigationController.h; sourceTree = "<group>"; };
+		8ED6BD321D2100360024251F /* WHDBaseNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDBaseNavigationController.m; sourceTree = "<group>"; };
+		8ED6BD341D2102500024251F /* PersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonViewController.h; sourceTree = "<group>"; };
+		8ED6BD351D2102500024251F /* PersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonViewController.m; sourceTree = "<group>"; };
+		8ED6BD361D2102500024251F /* PersonViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonViewController.xib; sourceTree = "<group>"; };
+		8ED6BD391D211E100024251F /* barIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = barIcon.xcassets; sourceTree = "<group>"; };
+		8ED6BD3B1D215D540024251F /* UserIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = UserIcon.xcassets; sourceTree = "<group>"; };
+		8ED6BD3D1D217A680024251F /* BeginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeginViewController.h; sourceTree = "<group>"; };
+		8ED6BD3E1D217A680024251F /* BeginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeginViewController.m; sourceTree = "<group>"; };
+		8ED6BD3F1D217A680024251F /* BeginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BeginViewController.xib; sourceTree = "<group>"; };
+		8ED6BD421D2191580024251F /* WHDNearsCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHDNearsCollectionViewCell.h; sourceTree = "<group>"; };
+		8ED6BD431D2191580024251F /* WHDNearsCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHDNearsCollectionViewCell.m; sourceTree = "<group>"; };
+		8ED6BD441D2191580024251F /* WHDNearsCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WHDNearsCollectionViewCell.xib; sourceTree = "<group>"; };
+		F58340C4E29711942FC298A7 /* Pods-FootLove.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FootLove.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FootLove/Pods-FootLove.debug.xcconfig"; sourceTree = "<group>"; };
+		FEA0D19AE9EA79E68286CC08 /* Pods-FootLove.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FootLove.release.xcconfig"; path = "Pods/Target Support Files/Pods-FootLove/Pods-FootLove.release.xcconfig"; sourceTree = "<group>"; };
+		FF0C8AFE0832E17E10CBDAC8 /* libPods-FootLove.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FootLove.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8ED6BCCA1D20FCF60024251F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E964A8A1A272AEDB9BC7DA51 /* libPods-FootLove.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8ED6BCE31D20FCF60024251F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8ED6BCEE1D20FCF60024251F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8ED6BCC41D20FCF60024251F = {
+			isa = PBXGroup;
+			children = (
+				8ED6BCCF1D20FCF60024251F /* FootLove */,
+				8ED6BCE91D20FCF60024251F /* FootLoveTests */,
+				8ED6BCF41D20FCF60024251F /* FootLoveUITests */,
+				8ED6BCCE1D20FCF60024251F /* Products */,
+				DCD5485BEA83D0089688006D /* Pods */,
+				DB057B53B1836D8E0651E255 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		8ED6BCCE1D20FCF60024251F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BCCD1D20FCF60024251F /* FootLove.app */,
+				8ED6BCE61D20FCF60024251F /* FootLoveTests.xctest */,
+				8ED6BCF11D20FCF60024251F /* FootLoveUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8ED6BCCF1D20FCF60024251F /* FootLove */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BD031D20FE460024251F /* Controllers */,
+				8ED6BD091D20FE460024251F /* Uils(第三方库) */,
+				8ED6BCD31D20FCF60024251F /* AppDelegate.h */,
+				8ED6BCD41D20FCF60024251F /* AppDelegate.m */,
+				8ED6BCD91D20FCF60024251F /* Main.storyboard */,
+				8ED6BCDC1D20FCF60024251F /* Assets.xcassets */,
+				8ED6BD391D211E100024251F /* barIcon.xcassets */,
+				8ED6BD3B1D215D540024251F /* UserIcon.xcassets */,
+				8ED6BCDE1D20FCF60024251F /* LaunchScreen.storyboard */,
+				8ED6BCE11D20FCF60024251F /* Info.plist */,
+				8ED6BD0A1D20FEC10024251F /* PrefixHeader.pch */,
+				8ED6BCD01D20FCF60024251F /* Supporting Files */,
+			);
+			path = FootLove;
+			sourceTree = "<group>";
+		};
+		8ED6BCD01D20FCF60024251F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BCD11D20FCF60024251F /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8ED6BCE91D20FCF60024251F /* FootLoveTests */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BCEA1D20FCF60024251F /* FootLoveTests.m */,
+				8ED6BCEC1D20FCF60024251F /* Info.plist */,
+			);
+			path = FootLoveTests;
+			sourceTree = "<group>";
+		};
+		8ED6BCF41D20FCF60024251F /* FootLoveUITests */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BCF51D20FCF60024251F /* FootLoveUITests.m */,
+				8ED6BCF71D20FCF60024251F /* Info.plist */,
+			);
+			path = FootLoveUITests;
+			sourceTree = "<group>";
+		};
+		8ED6BD031D20FE460024251F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BD041D20FE460024251F /* BaseVCTS */,
+				8ED6BD071D20FE460024251F /* Nears */,
+				8ED6BD061D20FE460024251F /* Messages */,
+				8ED6BD051D20FE460024251F /* Discover */,
+				8ED6BD081D20FE460024251F /* Wallet */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		8ED6BD041D20FE460024251F /* BaseVCTS */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BD281D20FFD80024251F /* RootViewController.h */,
+				8ED6BD291D20FFD80024251F /* RootViewController.m */,
+				8ED6BD0B1D20FF730024251F /* WHDBaseViewController.h */,
+				8ED6BD0C1D20FF730024251F /* WHDBaseViewController.m */,
+				8ED6BD2E1D21001D0024251F /* WHDBaseTabBarController.h */,
+				8ED6BD2F1D21001D0024251F /* WHDBaseTabBarController.m */,
+				8ED6BD311D2100360024251F /* WHDBaseNavigationController.h */,
+				8ED6BD321D2100360024251F /* WHDBaseNavigationController.m */,
+				8ED6BD341D2102500024251F /* PersonViewController.h */,
+				8ED6BD351D2102500024251F /* PersonViewController.m */,
+				8ED6BD361D2102500024251F /* PersonViewController.xib */,
+				8ED6BD3D1D217A680024251F /* BeginViewController.h */,
+				8ED6BD3E1D217A680024251F /* BeginViewController.m */,
+				8ED6BD3F1D217A680024251F /* BeginViewController.xib */,
+			);
+			path = BaseVCTS;
+			sourceTree = "<group>";
+		};
+		8ED6BD051D20FE460024251F /* Discover */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BD0E1D20FF8B0024251F /* WHDDiscoverViewController.h */,
+				8ED6BD0F1D20FF8B0024251F /* WHDDiscoverViewController.m */,
+				8ED6BD101D20FF8B0024251F /* WHDDiscoverViewController.xib */,
+			);
+			path = Discover;
+			sourceTree = "<group>";
+		};
+		8ED6BD061D20FE460024251F /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BD131D20FF970024251F /* WHDMessagesViewController.h */,
+				8ED6BD141D20FF970024251F /* WHDMessagesViewController.m */,
+				8ED6BD151D20FF970024251F /* WHDMessagesViewController.xib */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		8ED6BD071D20FE460024251F /* Nears */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BD1B1D20FFAE0024251F /* WHDNearsViewController.h */,
+				8ED6BD1C1D20FFAE0024251F /* WHDNearsViewController.m */,
+				8ED6BD1D1D20FFAE0024251F /* WHDNearsViewController.xib */,
+				8ED6BD421D2191580024251F /* WHDNearsCollectionViewCell.h */,
+				8ED6BD431D2191580024251F /* WHDNearsCollectionViewCell.m */,
+				8ED6BD441D2191580024251F /* WHDNearsCollectionViewCell.xib */,
+				8ED50F701D2201760022EC51 /* WHDmodel.h */,
+				8ED50F711D2201760022EC51 /* WHDmodel.m */,
+			);
+			path = Nears;
+			sourceTree = "<group>";
+		};
+		8ED6BD081D20FE460024251F /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				8ED6BD231D20FFCC0024251F /* WHDWalletViewController.h */,
+				8ED6BD241D20FFCC0024251F /* WHDWalletViewController.m */,
+				8ED6BD251D20FFCC0024251F /* WHDWalletViewController.xib */,
+			);
+			path = Wallet;
+			sourceTree = "<group>";
+		};
+		8ED6BD091D20FE460024251F /* Uils(第三方库) */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Uils(第三方库)";
+			sourceTree = "<group>";
+		};
+		DB057B53B1836D8E0651E255 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FF0C8AFE0832E17E10CBDAC8 /* libPods-FootLove.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DCD5485BEA83D0089688006D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F58340C4E29711942FC298A7 /* Pods-FootLove.debug.xcconfig */,
+				FEA0D19AE9EA79E68286CC08 /* Pods-FootLove.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8ED6BCCC1D20FCF60024251F /* FootLove */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8ED6BCFA1D20FCF60024251F /* Build configuration list for PBXNativeTarget "FootLove" */;
+			buildPhases = (
+				4A536CE568E5C581F3E1E5D6 /* 📦 Check Pods Manifest.lock */,
+				8ED6BCC91D20FCF60024251F /* Sources */,
+				8ED6BCCA1D20FCF60024251F /* Frameworks */,
+				8ED6BCCB1D20FCF60024251F /* Resources */,
+				3DEECECA36274928B91A18CD /* 📦 Embed Pods Frameworks */,
+				78DB3BACC0E9B10D188C94C9 /* 📦 Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FootLove;
+			productName = FootLove;
+			productReference = 8ED6BCCD1D20FCF60024251F /* FootLove.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8ED6BCE51D20FCF60024251F /* FootLoveTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8ED6BCFD1D20FCF60024251F /* Build configuration list for PBXNativeTarget "FootLoveTests" */;
+			buildPhases = (
+				8ED6BCE21D20FCF60024251F /* Sources */,
+				8ED6BCE31D20FCF60024251F /* Frameworks */,
+				8ED6BCE41D20FCF60024251F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8ED6BCE81D20FCF60024251F /* PBXTargetDependency */,
+			);
+			name = FootLoveTests;
+			productName = FootLoveTests;
+			productReference = 8ED6BCE61D20FCF60024251F /* FootLoveTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8ED6BCF01D20FCF60024251F /* FootLoveUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8ED6BD001D20FCF60024251F /* Build configuration list for PBXNativeTarget "FootLoveUITests" */;
+			buildPhases = (
+				8ED6BCED1D20FCF60024251F /* Sources */,
+				8ED6BCEE1D20FCF60024251F /* Frameworks */,
+				8ED6BCEF1D20FCF60024251F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8ED6BCF31D20FCF60024251F /* PBXTargetDependency */,
+			);
+			name = FootLoveUITests;
+			productName = FootLoveUITests;
+			productReference = 8ED6BCF11D20FCF60024251F /* FootLoveUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8ED6BCC51D20FCF60024251F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = WHD;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "hundred Company";
+				TargetAttributes = {
+					8ED6BCCC1D20FCF60024251F = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 8MZ39B25XE;
+					};
+					8ED6BCE51D20FCF60024251F = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 8MZ39B25XE;
+						TestTargetID = 8ED6BCCC1D20FCF60024251F;
+					};
+					8ED6BCF01D20FCF60024251F = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 8MZ39B25XE;
+						TestTargetID = 8ED6BCCC1D20FCF60024251F;
+					};
+				};
+			};
+			buildConfigurationList = 8ED6BCC81D20FCF60024251F /* Build configuration list for PBXProject "FootLove" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8ED6BCC41D20FCF60024251F;
+			productRefGroup = 8ED6BCCE1D20FCF60024251F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8ED6BCCC1D20FCF60024251F /* FootLove */,
+				8ED6BCE51D20FCF60024251F /* FootLoveTests */,
+				8ED6BCF01D20FCF60024251F /* FootLoveUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8ED6BCCB1D20FCF60024251F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8ED6BD1F1D20FFAE0024251F /* WHDNearsViewController.xib in Resources */,
+				8ED6BD171D20FF970024251F /* WHDMessagesViewController.xib in Resources */,
+				8ED6BD461D2191580024251F /* WHDNearsCollectionViewCell.xib in Resources */,
+				8ED6BD3A1D211E100024251F /* barIcon.xcassets in Resources */,
+				8ED6BCE01D20FCF60024251F /* LaunchScreen.storyboard in Resources */,
+				8ED6BCDD1D20FCF60024251F /* Assets.xcassets in Resources */,
+				8ED6BD271D20FFCC0024251F /* WHDWalletViewController.xib in Resources */,
+				8ED6BCDB1D20FCF60024251F /* Main.storyboard in Resources */,
+				8ED6BD3C1D215D540024251F /* UserIcon.xcassets in Resources */,
+				8ED6BD411D217A680024251F /* BeginViewController.xib in Resources */,
+				8ED6BD121D20FF8B0024251F /* WHDDiscoverViewController.xib in Resources */,
+				8ED6BD381D2102500024251F /* PersonViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8ED6BCE41D20FCF60024251F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8ED6BCEF1D20FCF60024251F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3DEECECA36274928B91A18CD /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FootLove/Pods-FootLove-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4A536CE568E5C581F3E1E5D6 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		78DB3BACC0E9B10D188C94C9 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FootLove/Pods-FootLove-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8ED6BCC91D20FCF60024251F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8ED6BD371D2102500024251F /* PersonViewController.m in Sources */,
+				8ED6BD261D20FFCC0024251F /* WHDWalletViewController.m in Sources */,
+				8ED6BCD51D20FCF60024251F /* AppDelegate.m in Sources */,
+				8ED50F721D2201760022EC51 /* WHDmodel.m in Sources */,
+				8ED6BD331D2100360024251F /* WHDBaseNavigationController.m in Sources */,
+				8ED6BD451D2191580024251F /* WHDNearsCollectionViewCell.m in Sources */,
+				8ED6BD401D217A680024251F /* BeginViewController.m in Sources */,
+				8ED6BD2A1D20FFD80024251F /* RootViewController.m in Sources */,
+				8ED6BD301D21001D0024251F /* WHDBaseTabBarController.m in Sources */,
+				8ED6BCD21D20FCF60024251F /* main.m in Sources */,
+				8ED6BD161D20FF970024251F /* WHDMessagesViewController.m in Sources */,
+				8ED6BD0D1D20FF730024251F /* WHDBaseViewController.m in Sources */,
+				8ED6BD1E1D20FFAE0024251F /* WHDNearsViewController.m in Sources */,
+				8ED6BD111D20FF8B0024251F /* WHDDiscoverViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8ED6BCE21D20FCF60024251F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8ED6BCEB1D20FCF60024251F /* FootLoveTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8ED6BCED1D20FCF60024251F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8ED6BCF61D20FCF60024251F /* FootLoveUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8ED6BCE81D20FCF60024251F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8ED6BCCC1D20FCF60024251F /* FootLove */;
+			targetProxy = 8ED6BCE71D20FCF60024251F /* PBXContainerItemProxy */;
+		};
+		8ED6BCF31D20FCF60024251F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8ED6BCCC1D20FCF60024251F /* FootLove */;
+			targetProxy = 8ED6BCF21D20FCF60024251F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		8ED6BCD91D20FCF60024251F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8ED6BCDA1D20FCF60024251F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8ED6BCDE1D20FCF60024251F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8ED6BCDF1D20FCF60024251F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		8ED6BCF81D20FCF60024251F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		8ED6BCF91D20FCF60024251F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8ED6BCFB1D20FCF60024251F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F58340C4E29711942FC298A7 /* Pods-FootLove.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FootLove/PrefixHeader.pch";
+				INFOPLIST_FILE = FootLove/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = WHD.FootLove;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8ED6BCFC1D20FCF60024251F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FEA0D19AE9EA79E68286CC08 /* Pods-FootLove.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FootLove/PrefixHeader.pch";
+				INFOPLIST_FILE = FootLove/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = WHD.FootLove;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		8ED6BCFE1D20FCF60024251F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = FootLoveTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = WHD.FootLoveTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FootLove.app/FootLove";
+			};
+			name = Debug;
+		};
+		8ED6BCFF1D20FCF60024251F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = FootLoveTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = WHD.FootLoveTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FootLove.app/FootLove";
+			};
+			name = Release;
+		};
+		8ED6BD011D20FCF60024251F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = FootLoveUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = WHD.FootLoveUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = FootLove;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		8ED6BD021D20FCF60024251F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = FootLoveUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = WHD.FootLoveUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = FootLove;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8ED6BCC81D20FCF60024251F /* Build configuration list for PBXProject "FootLove" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8ED6BCF81D20FCF60024251F /* Debug */,
+				8ED6BCF91D20FCF60024251F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8ED6BCFA1D20FCF60024251F /* Build configuration list for PBXNativeTarget "FootLove" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8ED6BCFB1D20FCF60024251F /* Debug */,
+				8ED6BCFC1D20FCF60024251F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8ED6BCFD1D20FCF60024251F /* Build configuration list for PBXNativeTarget "FootLoveTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8ED6BCFE1D20FCF60024251F /* Debug */,
+				8ED6BCFF1D20FCF60024251F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8ED6BD001D20FCF60024251F /* Build configuration list for PBXNativeTarget "FootLoveUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8ED6BD011D20FCF60024251F /* Debug */,
+				8ED6BD021D20FCF60024251F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8ED6BCC51D20FCF60024251F /* Project object */;
+}

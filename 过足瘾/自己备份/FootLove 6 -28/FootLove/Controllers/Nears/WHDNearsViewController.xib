@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WHDNearsViewController">
+            <connections>
+                <outlet property="myColloction" destination="gJX-KK-9HI" id="hCx-8E-l4l"/>
+                <outlet property="mySegment" destination="wNJ-QO-fUK" id="3Fm-fM-XF3"/>
+                <outlet property="segBackView" destination="geQ-m1-0k2" id="Qaa-0A-6cR"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="geQ-m1-0k2">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                    <subviews>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="wNJ-QO-fUK">
+                            <rect key="frame" x="35" y="6" width="250" height="31"/>
+                            <segments>
+                                <segment title="技师"/>
+                                <segment title="店铺"/>
+                            </segments>
+                        </segmentedControl>
+                    </subviews>
+                    <color key="backgroundColor" red="0.62745098039215685" green="0.23529411764705882" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="wNJ-QO-fUK" firstAttribute="centerX" secondItem="geQ-m1-0k2" secondAttribute="centerX" id="1Q1-bs-Vmf"/>
+                        <constraint firstItem="wNJ-QO-fUK" firstAttribute="width" secondItem="geQ-m1-0k2" secondAttribute="width" constant="-70" id="PxD-8V-HyB"/>
+                        <constraint firstItem="wNJ-QO-fUK" firstAttribute="height" secondItem="geQ-m1-0k2" secondAttribute="height" constant="-20" id="fBT-Rs-Cgr"/>
+                        <constraint firstAttribute="height" constant="50" id="fIc-kV-yh0"/>
+                        <constraint firstItem="wNJ-QO-fUK" firstAttribute="centerY" secondItem="geQ-m1-0k2" secondAttribute="centerY" constant="-5" id="yvF-u7-Piq"/>
+                    </constraints>
+                </view>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="gJX-KK-9HI">
+                    <rect key="frame" x="0.0" y="50" width="320" height="518"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ASR-55-T1S">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="wkU-ts-nyb"/>
+                        <outlet property="delegate" destination="-1" id="MXA-4v-fc2"/>
+                    </connections>
+                </collectionView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="geQ-m1-0k2" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3GU-T8-Ttx"/>
+                <constraint firstItem="gJX-KK-9HI" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Yze-Kw-HGa"/>
+                <constraint firstAttribute="bottom" secondItem="gJX-KK-9HI" secondAttribute="bottom" id="jnp-TV-EV1"/>
+                <constraint firstAttribute="trailing" secondItem="gJX-KK-9HI" secondAttribute="trailing" id="kon-lD-cpe"/>
+                <constraint firstAttribute="trailing" secondItem="geQ-m1-0k2" secondAttribute="trailing" id="p8h-8c-mbZ"/>
+                <constraint firstItem="gJX-KK-9HI" firstAttribute="top" secondItem="geQ-m1-0k2" secondAttribute="bottom" id="q6d-d9-wPS"/>
+                <constraint firstItem="geQ-m1-0k2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="t3z-PA-fIG"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+</document>

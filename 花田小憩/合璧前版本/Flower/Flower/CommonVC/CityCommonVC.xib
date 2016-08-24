@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CityCommonVC">
+            <connections>
+                <outlet property="cityTableView" destination="F93-zs-UpH" id="VPW-uO-03u"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="nOq-RR-yHB">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <textInputTraits key="textInputTraits"/>
+                </searchBar>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="F93-zs-UpH">
+                    <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="hz6-Jb-w1z"/>
+                        <outlet property="delegate" destination="-1" id="aPr-2M-qSA"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="nOq-RR-yHB" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Cwu-ax-yxs"/>
+                <constraint firstAttribute="trailing" secondItem="nOq-RR-yHB" secondAttribute="trailing" id="XmE-wQ-Qix"/>
+                <constraint firstAttribute="bottom" secondItem="F93-zs-UpH" secondAttribute="bottom" id="Zvk-08-Mgs"/>
+                <constraint firstItem="F93-zs-UpH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="m94-sv-JyK"/>
+                <constraint firstItem="nOq-RR-yHB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="nEI-ln-jkZ"/>
+                <constraint firstItem="F93-zs-UpH" firstAttribute="top" secondItem="nOq-RR-yHB" secondAttribute="bottom" id="nUC-B9-Sso"/>
+                <constraint firstAttribute="trailing" secondItem="F93-zs-UpH" secondAttribute="trailing" id="qcK-wn-2G8"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+        </view>
+    </objects>
+</document>

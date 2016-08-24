@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WHDWebViewController">
+            <connections>
+                <outlet property="myWebView" destination="Hat-rA-VD1" id="W90-I3-l3b"/>
+                <outlet property="tmpIMG" destination="vSW-JR-4Si" id="n50-mK-2sj"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hat-rA-VD1">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="613"/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="dQl-HP-eAW"/>
+                    </connections>
+                </webView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vSW-JR-4Si">
+                    <rect key="frame" x="127" y="274" width="120" height="120"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="120" id="U04-dp-JCt"/>
+                        <constraint firstAttribute="width" secondItem="vSW-JR-4Si" secondAttribute="height" multiplier="8:8" id="sAo-KS-jd7"/>
+                    </constraints>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HFp-GN-8sd">
+                    <rect key="frame" x="0.0" y="613" width="375" height="54"/>
+                    <subviews>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Yh-Zv-Z0E" customClass="WHDButton">
+                            <rect key="frame" x="122" y="12" width="130" height="30"/>
+                            <color key="backgroundColor" red="1" green="0.6575881318247232" blue="0.21857200506010377" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="7Yh-Zv-Z0E" secondAttribute="height" multiplier="13:3" id="5YV-oM-GbM"/>
+                                <constraint firstAttribute="width" constant="130" id="vbg-iT-Nab"/>
+                            </constraints>
+                            <state key="normal">
+                                <attributedString key="attributedTitle">
+                                    <fragment content="报   名">
+                                        <attributes>
+                                            <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <font key="NSFont" size="18" name="PingFangSC-Medium"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="R">
+                                    <real key="value" value="15"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="W">
+                                    <real key="value" value="0.0"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                    <color key="value" red="0.71893652559999999" green="1" blue="0.84941526300000003" alpha="1" colorSpace="calibratedRGB"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="7Yh-Zv-Z0E" firstAttribute="centerY" secondItem="HFp-GN-8sd" secondAttribute="centerY" id="Ata-4m-ZY0"/>
+                        <constraint firstItem="7Yh-Zv-Z0E" firstAttribute="centerX" secondItem="HFp-GN-8sd" secondAttribute="centerX" id="Ejy-qT-Pe0"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Hat-rA-VD1" secondAttribute="trailing" id="AxB-Gn-kIF"/>
+                <constraint firstItem="HFp-GN-8sd" firstAttribute="top" secondItem="Hat-rA-VD1" secondAttribute="bottom" id="Jgn-TC-Vdh"/>
+                <constraint firstItem="HFp-GN-8sd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="KOL-o2-4HP"/>
+                <constraint firstAttribute="bottom" secondItem="Hat-rA-VD1" secondAttribute="bottom" constant="54" id="NQU-CC-ZP3"/>
+                <constraint firstItem="vSW-JR-4Si" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Ygg-MA-TpN"/>
+                <constraint firstAttribute="trailing" secondItem="HFp-GN-8sd" secondAttribute="trailing" id="aZo-VI-bz9"/>
+                <constraint firstItem="vSW-JR-4Si" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="fBB-ky-clf"/>
+                <constraint firstItem="Hat-rA-VD1" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="gca-TJ-PTI"/>
+                <constraint firstAttribute="bottom" secondItem="HFp-GN-8sd" secondAttribute="bottom" id="hxs-4U-mJ7"/>
+                <constraint firstItem="Hat-rA-VD1" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="q1s-ir-Jv4"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+        </view>
+    </objects>
+</document>

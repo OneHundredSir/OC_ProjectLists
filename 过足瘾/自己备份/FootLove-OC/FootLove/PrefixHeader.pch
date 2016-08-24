@@ -1,0 +1,78 @@
+//
+//  PrefixHeader.pch
+//  FootLove
+//
+//  Created by HUN on 16/6/27.
+//  Copyright © 2016年 hundred Company. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file./Users/huanghuiqun/Desktop/FootLove/FootLove/PrefixHeader.pch
+
+//*********头文件************/
+#import "WHDHttpRequest.h"
+//共有的头文件
+#import "WebViewController.h"//单个网页的
+#import "WHDImgScrollView.h"//定时可移动的轮播图
+
+
+//左边的抽屉效果框
+#import "PersonViewController.h"
+#import "WHDBaseTabBarController.h"
+#import "WHDBaseViewController.h"
+#import "WHDBaseNavigationController.h"
+
+//这里设置的是rootview一定要房后一点不然回报错
+#import "AppDelegate.h"
+#import "RootViewController.h"
+#import "BookViewController.h"
+
+//*********第三方头文件************/
+#import <MJRefresh.h>
+#import <FMDatabase.h>
+#import <MBProgressHUD.h>
+#import <UIImageView+WebCache.h>
+
+
+
+//********** Method ***********/
+/**
+ *  设置控制person的控制器的形变
+ */
+#define  myIsOn(realBtn)\
+AppDelegate *del = [UIApplication sharedApplication].delegate;\
+RootViewController *vc = (RootViewController *)del.window.rootViewController;\
+vc.personVC.IsOn=realBtn;\
+vc.tabarVC.pan.enabled = realBtn;
+/**
+ *  冲storyboard中读取静态页面,a为nsstring
+ */
+#define WHD_StoryWithName(a)\
+[[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:a];
+
+/**
+ *  申明属性
+ */
+#define WHDOringinal(a) \
+@property(nonatomic,strong)id a;
+
+//*********常量************/
+#define W_width [UIScreen mainScreen].bounds.size.width
+#define W_height [UIScreen mainScreen].bounds.size.height
+#define W_font(a)  [UIFont systemFontOfSize:a]
+
+#define MySetUser @"W_hundred"
+//背景颜色
+#define W_BackColor  [UIColor colorWithRed:110/255.0 green:60/255.0 blue:212/255.0 alpha:1]
+#define W_viewColor  [UIColor colorWithRed:243/255.0 green:243/255.0 blue:243/255.0 alpha:1]
+//抽屉要缩放的比例
+#define W_scale 0.8
+
+#define XMPPLocation @"@macbook-pro.local"
+
+
+
+#endif /* PrefixHeader_pch */

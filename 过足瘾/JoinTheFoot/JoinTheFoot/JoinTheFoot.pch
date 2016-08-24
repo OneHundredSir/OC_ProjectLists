@@ -1,0 +1,57 @@
+//
+//  JoinTheFoot.pch
+//  JoinTheFoot
+//
+//  Created by skd on 16/6/27.
+//  Copyright © 2016年 lzm. All rights reserved.
+//
+
+#ifndef JoinTheFoot_pch
+#define JoinTheFoot_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+
+
+//************头文件＊＊＊＊＊＊＊
+#import "AppDelegate.h"
+#import "MainTabBarController.h"
+#import "PersonalViewController.h"
+#import "BaseNavigationController.h"
+#import "WDRootViewController.h"
+#import "MJRefresh.h"
+#import "WDHttpRequest.h"
+#import "UIImageView+WebCache.h"
+
+
+
+//*************常量＊＊＊＊＊＊＊
+#define FIRST @"first_into_APP"
+#define kScreen_W [UIScreen mainScreen].bounds.size.width
+#define kScreen_H [UIScreen mainScreen].bounds.size.height
+#define font(a) [UIFont systemFontOfSize:a]
+#define mian_color [UIColor colorWithRed:162 / 255.0 green:46 / 255.0 blue:250 / 255.0 alpha:1]
+#define bg_color [UIColor colorWithRed:243 / 255.0 green:243 / 255.0 blue:243 / 255.0 alpha:1]
+
+
+
+
+
+//***************method*********
+
+#define personPage(YESORNO)\
+AppDelegate *del = [UIApplication sharedApplication].delegate;\
+WDRootViewController *root = (WDRootViewController *)del.window.rootViewController;\
+root.personal.isOpen = YESORNO;
+
+
+#define tabbarHidden(YESORNO)\
+AppDelegate *del = [UIApplication sharedApplication].delegate;\
+WDRootViewController *root = (WDRootViewController *)del.window.rootViewController;\
+root.mianTabBar.tabBar.alpha =  (YESORNO)?0:1;\
+
+
+
+
+#endif /* JoinTheFoot_pch */

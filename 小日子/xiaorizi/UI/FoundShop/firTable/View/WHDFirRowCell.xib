@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="250" id="D77-GV-e2L" customClass="WHDFirRowCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="250"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D77-GV-e2L" id="QsT-oE-YiQ">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="249"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eFR-id-Nnh">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="10" id="Ag1-gb-o1D"/>
+                        </constraints>
+                    </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="5.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="nm3-SJ-WG4">
+                        <rect key="frame" x="0.0" y="10" width="320" height="239"/>
+                    </imageView>
+                    <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eOe-Xu-toi">
+                        <rect key="frame" x="0.0" y="10" width="320" height="239"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="岁月里的酸甜苦辣" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3I4-n9-J0i">
+                        <rect key="frame" x="64" y="87" width="192" height="29"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l3u-Qp-Plz">
+                        <rect key="frame" x="96" y="121" width="127" height="27"/>
+                        <attributedString key="attributedText">
+                            <fragment content="历史 人文 记录">
+                                <attributes>
+                                    <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <font key="NSFont" size="19" name="PingFangSC-Medium"/>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                </attributes>
+                            </fragment>
+                        </attributedString>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="eOe-Xu-toi" firstAttribute="centerY" secondItem="nm3-SJ-WG4" secondAttribute="centerY" id="4Ev-EP-iOJ"/>
+                    <constraint firstItem="nm3-SJ-WG4" firstAttribute="leading" secondItem="QsT-oE-YiQ" secondAttribute="leading" id="5U9-lh-hQY"/>
+                    <constraint firstItem="3I4-n9-J0i" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="QsT-oE-YiQ" secondAttribute="leadingMargin" constant="10" id="6JT-xn-Dd2"/>
+                    <constraint firstItem="nm3-SJ-WG4" firstAttribute="top" secondItem="QsT-oE-YiQ" secondAttribute="top" constant="10" id="8Vn-NM-C1f"/>
+                    <constraint firstItem="3I4-n9-J0i" firstAttribute="centerY" secondItem="QsT-oE-YiQ" secondAttribute="centerY" constant="-23.5" id="9zl-oN-HbR"/>
+                    <constraint firstItem="3I4-n9-J0i" firstAttribute="centerX" secondItem="QsT-oE-YiQ" secondAttribute="centerX" id="Eqw-z4-w1x"/>
+                    <constraint firstItem="eOe-Xu-toi" firstAttribute="centerX" secondItem="nm3-SJ-WG4" secondAttribute="centerX" id="GGi-EG-fd1"/>
+                    <constraint firstItem="eOe-Xu-toi" firstAttribute="width" secondItem="nm3-SJ-WG4" secondAttribute="width" id="MGQ-yl-iwm"/>
+                    <constraint firstItem="eFR-id-Nnh" firstAttribute="top" secondItem="QsT-oE-YiQ" secondAttribute="top" id="TfJ-D4-30W"/>
+                    <constraint firstItem="l3u-Qp-Plz" firstAttribute="top" secondItem="3I4-n9-J0i" secondAttribute="bottom" constant="5" id="UdU-5H-E4H"/>
+                    <constraint firstAttribute="trailing" secondItem="nm3-SJ-WG4" secondAttribute="trailing" id="WcT-m8-o0j"/>
+                    <constraint firstItem="eFR-id-Nnh" firstAttribute="leading" secondItem="QsT-oE-YiQ" secondAttribute="leading" id="cx8-D8-1Lp"/>
+                    <constraint firstAttribute="bottom" secondItem="nm3-SJ-WG4" secondAttribute="bottom" id="fuX-4D-qff"/>
+                    <constraint firstAttribute="trailing" secondItem="eFR-id-Nnh" secondAttribute="trailing" id="m80-li-Tnm"/>
+                    <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="3I4-n9-J0i" secondAttribute="trailing" constant="10" id="rm9-sA-2y3"/>
+                    <constraint firstItem="l3u-Qp-Plz" firstAttribute="centerX" secondItem="3I4-n9-J0i" secondAttribute="centerX" id="sdU-gS-u4w"/>
+                    <constraint firstItem="eOe-Xu-toi" firstAttribute="height" secondItem="nm3-SJ-WG4" secondAttribute="height" id="uKW-Er-6TD"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="backImg" destination="nm3-SJ-WG4" id="h7W-Zn-Tu4"/>
+                <outlet property="detailLabel" destination="l3u-Qp-Plz" id="Q8t-ZA-7Fj"/>
+                <outlet property="titleLabel" destination="3I4-n9-J0i" id="zQ6-ou-40j"/>
+            </connections>
+            <point key="canvasLocation" x="230" y="201"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="5.jpg" width="500" height="375"/>
+    </resources>
+</document>

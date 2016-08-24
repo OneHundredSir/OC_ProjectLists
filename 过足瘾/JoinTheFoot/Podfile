@@ -1,0 +1,5 @@
+pod 'MJRefresh'
+pod 'SDWebImage'
+pod 'XMPPFramework'
+pod 'FMDB'
+pod 'MBProgressHUD'

@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "542D7AAA18AC20E2E45D7C93DC0B818CC6FF2F8A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "4566A25420C56029C8CE7DBA037E59E449D97D37" : 0,
+    "542D7AAA18AC20E2E45D7C93DC0B818CC6FF2F8A" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "A3FBDF5D-2BF0-4E39-B0BE-7DD0FB30643A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "4566A25420C56029C8CE7DBA037E59E449D97D37" : "",
+    "542D7AAA18AC20E2E45D7C93DC0B818CC6FF2F8A" : "smallday_objectiveC\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "xiaorizi",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "smallday_objectiveC-hundred\/xiaorizi.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/OneHundredSir\/OC_smallDay.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4566A25420C56029C8CE7DBA037E59E449D97D37"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/whjool\/smallday_objectiveC.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "542D7AAA18AC20E2E45D7C93DC0B818CC6FF2F8A"
+    }
+  ]
+}
